@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WIX A/B Test — Layout Explorations</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --blue:#116DFF;
+  --blue-h:#0D5EDB;
+  --blue-lt:#EDF3FF;
+  --bg:#F7F8FA;
+  --card:#fff;
+  --border:#E2E6ED;
+  --t1:#2D3540;
+  --t2:#677179;
+  --t3:#A8B3BD;
+  --green:#2A9057;
+  --green-lt:#EDFBF4;
+  --green-bd:rgba(42,144,87,0.22);
+  --amber:#A06800;
+  --amber-lt:#FFF8E6;
+  --shadow:0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.04);
+}
+
+body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--bg);color:var(--t1);font-size:13px;line-height:1.5}
+
+/* ─── Exploration bar ─── */
+.exp-bar{height:46px;background:#1B2433;display:flex;align-items:center;padding:0 24px;gap:12px;flex-shrink:0}
+.exp-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);white-space:nowrap}
+.exp-pills{display:flex;gap:3px;background:rgba(255,255,255,.07);border-radius:100px;padding:3px}
+.exp-btn{padding:4px 13px;border-radius:100px;border:none;background:transparent;color:rgba(255,255,255,.4);font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.exp-btn:hover{color:rgba(255,255,255,.8)}
+.exp-btn.active{background:white;color:#1B2433;font-weight:700}
+.exp-btn.highlight{border:1px solid rgba(255,255,255,.2)}
+.exp-btn.highlight.active{background:#116DFF;color:white;border-color:transparent}
+.exp-hint{margin-left:auto;font-size:11px;color:rgba(255,255,255,.22);white-space:nowrap}
+
+/* ─── WIX top nav ─── */
+.wix-nav{height:56px;background:white;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:8px;position:sticky;top:0;z-index:90}
+.wix-logo{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--t1);margin-right:6px}
+.wix-logo b{color:var(--blue)}
+.site-pill{display:flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--t1);cursor:pointer}
+.site-abbr{width:20px;height:20px;border-radius:4px;background:linear-gradient(135deg,#6B7AE8,#9B59B6);color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.nav-links{display:flex;gap:2px;margin-left:4px}
+.nav-link{padding:5px 10px;font-size:12px;color:var(--t2);border-radius:4px;cursor:pointer}
+.nav-link:hover{background:var(--bg);color:var(--t1)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-search{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:5px 13px;font-size:12px;color:var(--t3);width:196px}
+.nav-search svg{width:13px;height:13px;flex-shrink:0}
+.upgrade-btn{background:var(--blue);color:white;border:none;border-radius:100px;padding:6px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.nav-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:var(--t2);cursor:pointer}
+.nav-icon:hover{background:var(--bg)}
+.nav-icon svg{width:16px;height:16px}
+.avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#6B7AE8,#9B59B6);display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:700;cursor:pointer}
+
+/* ─── Shell ─── */
+.wix-shell{display:flex;min-height:calc(100vh - 102px)}
+
+/* ─── Sidebar ─── */
+.wix-sb{width:252px;background:white;border-right:1px solid var(--border);flex-shrink:0;overflow-y:auto}
+.sb-setup{padding:12px 16px 8px;font-size:12px;font-weight:700;color:var(--t1);display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.sb-setup svg{width:12px;height:12px;color:var(--t3)}
+.sb-progress{height:3px;background:var(--border);margin:0 16px}
+.sb-progress-fill{width:0;height:100%;background:var(--blue)}
+.sb-setup-sub{font-size:11px;color:var(--t2);padding:5px 16px 12px;border-bottom:1px solid var(--border)}
+.sb-item{display:flex;align-items:center;gap:10px;padding:8px 16px;font-size:13px;color:var(--t2);cursor:pointer}
+.sb-item:hover{background:var(--bg);color:var(--t1)}
+.sb-item.open{color:var(--t1);font-weight:600}
+.sb-item svg{width:15px;height:15px;flex-shrink:0;opacity:.6}
+.sb-item.open svg{opacity:1}
+.sb-item .chev{margin-left:auto;width:11px;height:11px;opacity:.4}
+.sb-sub{padding-bottom:4px}
+.sb-sub-item{padding:6px 16px 6px 42px;font-size:13px;color:var(--t2);cursor:pointer}
+.sb-sub-item:hover{background:var(--bg);color:var(--t1)}
+.sb-sub-item.active{color:var(--blue);font-weight:600;background:var(--blue-lt)}
+
+/* ─── Main ─── */
+.wix-main{flex:1;padding:28px 40px;min-width:0;overflow-y:auto}
+
+/* ─── Breadcrumb ─── */
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t2);margin-bottom:14px}
+.breadcrumb a{color:var(--blue);text-decoration:none}
+.bc-sep{color:var(--t3);font-size:11px}
+
+/* ─── Page header ─── */
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px}
+.page-title{font-size:22px;font-weight:700;margin-bottom:4px;line-height:1.2}
+.page-meta{font-size:13px;color:var(--t2)}
+.page-meta .sep{margin:0 8px;color:var(--t3)}
+.head-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:16px}
+.icon-btn{width:36px;height:36px;border:1px solid var(--border);border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2)}
+.icon-btn svg{width:14px;height:14px}
+.primary-btn{background:var(--blue);color:white;border:none;border-radius:100px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.primary-btn:hover{background:var(--blue-h)}
+.primary-btn-sm{background:var(--blue);color:white;border:none;border-radius:100px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.primary-btn-sm:hover{background:var(--blue-h)}
+
+/* ─── Cards ─── */
+.card{background:white;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow)}
+.card-head{padding:16px 20px;border-bottom:1px solid var(--border);font-size:14px;font-weight:700}
+.card-body{padding:20px}
+
+/* ─── Standard 2-col content grid ─── */
+.content-grid{display:grid;grid-template-columns:1fr 308px;gap:20px;align-items:start}
+
+/* ─── Variant label + winner badge ─── */
+.v-label{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.winner-badge{display:inline-flex;align-items:center;gap:3px;background:var(--green-lt);color:var(--green);font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;border:1px solid var(--green-bd)}
+.winner-badge svg{width:8px;height:8px}
+
+/* ─── Site preview mockup ─── */
+.preview-frame{border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.preview-frame.winning{border-color:rgba(42,144,87,.4)}
+.p-browser{background:#EEEEEE;padding:5px 8px;display:flex;align-items:center;gap:4px;border-bottom:1px solid #E0E0E0}
+.p-dot{width:7px;height:7px;border-radius:50%}
+.p-dot:nth-child(1){background:#FF5F57}.p-dot:nth-child(2){background:#FEBC2E}.p-dot:nth-child(3){background:#28C840}
+.p-url{flex:1;margin-left:5px;background:white;border-radius:3px;height:14px;display:flex;align-items:center;padding:0 6px;font-size:8px;color:#999}
+.p-content{background:#F5F0E8;padding:10px 12px 0}
+.p-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.p-logo{font-size:8px;font-weight:900;color:#2D2D2D;letter-spacing:.06em}
+.p-nav{display:flex;gap:6px}
+.p-nav-dot{width:18px;height:2px;background:#00000015;border-radius:2px}
+.p-hero{text-align:center;padding:6px 0 10px}
+.p-hero-title{font-size:9px;font-weight:800;color:#2D2D2D;line-height:1.35;margin-bottom:7px}
+.p-eyebrow{font-size:5.5px;color:#888;margin-bottom:3px;letter-spacing:.04em}
+.p-cta{display:inline-block;padding:3px 12px;font-size:6.5px;font-weight:800;color:white;border-radius:100px;letter-spacing:.04em;margin-bottom:2px}
+.p-img{height:64px;background:linear-gradient(160deg,#DFD6C4 0%,#C8BAA0 50%,#B8A888 100%);display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+.p-cat-body{width:56px;height:48px;background:linear-gradient(to bottom,#C8B890,#B8A070);border-radius:48% 48% 0 0;position:relative;margin-bottom:-2px}
+.p-cat-body::before,.p-cat-body::after{content:'';position:absolute;top:-9px;width:11px;height:14px;background:#C8B890;border-radius:50% 50% 0 0}
+.p-cat-body::before{left:7px;transform:rotate(-18deg)}.p-cat-body::after{right:7px;transform:rotate(18deg)}
+
+/* ─── Variants side by side ─── */
+.variants-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ─── Shared divider ─── */
+.opt-divider{height:1px;background:var(--border);margin:18px 0}
+
+/* ─── Layout panel visibility ─── */
+.opt-stats{display:none}
+.opt-stats.active{display:block}
+.alt-layout{display:none}
+.alt-layout.active{display:block}
+
+/* ─── Details card rows ─── */
+.detail-row{padding:12px 0;border-bottom:1px solid var(--border)}
+.detail-row:last-child{border-bottom:none}
+.detail-lbl{font-size:11px;color:var(--t2);margin-bottom:3px}
+.detail-val{font-size:13px;font-weight:600;color:var(--t1)}
+.status-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:500}
+.status-winner{background:var(--amber-lt);color:var(--amber)}
+
+/* ─── Internal card column split (Options 4 + 7) ─── */
+.card-col-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.card-col-left{padding:20px;border-right:1px solid var(--border)}
+.card-col-right{padding:20px}
+
+/* ─── Diff annotation strip ─── */
+.diff-strip{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 10px;
+  background:rgba(0,0,0,0.025);
+  border-radius:5px;border:1px solid var(--border);
+  margin:10px 0;font-size:11px;color:var(--t2);
+}
+.diff-lbl{font-weight:600;color:var(--t2);white-space:nowrap}
+.diff-swatch{width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,0.12);flex-shrink:0}
+.diff-arrow{color:var(--t3);font-size:11px;flex-shrink:0}
+
+/* ─── Result strip (inside card, below head) ─── */
+.result-strip{
+  padding:11px 20px;
+  background:var(--green-lt);
+  border-bottom:1px solid var(--green-bd);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.rs-left{display:flex;align-items:center;gap:8px}
+.rs-icon{width:22px;height:22px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rs-icon svg{width:10px;height:10px}
+.rs-title{font-size:13px;font-weight:700;color:var(--t1)}
+.rs-meta{font-size:11px;color:var(--t2);margin-top:1px}
+.rs-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.rs-lift{font-size:18px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums}
+.rs-lift-sub{font-size:10px;color:var(--t2);text-align:right}
+
+/* ─── Metric bars (shared O4 + O7) ─── */
+.metric-bars{margin-bottom:14px}
+.metric-bar-item{margin-bottom:10px}
+.metric-bar-item:last-child{margin-bottom:0}
+.mbi-labels{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.mbi-name{font-size:12px;color:var(--t2)}
+.mbi-name.win{color:var(--green);font-weight:600}
+.mbi-val{font-size:12px;font-weight:600;color:var(--t1);font-variant-numeric:tabular-nums}
+.mbi-val.win{color:var(--green)}
+.mbi-track{height:7px;background:var(--bg);border-radius:100px;overflow:hidden}
+.mbi-fill{height:100%;border-radius:100px}
+
+/* ─── Improvement chip ─── */
+.imp-row{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--green-lt);border-radius:6px;border:1px solid var(--green-bd);margin-bottom:14px}
+.imp-lbl{font-size:11px;color:var(--t2)}
+.imp-val{font-size:16px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums}
+
+/* ─── Mini comparison table (shared O4 + O7) ─── */
+.mini-comp-table{width:100%;border-collapse:collapse}
+.mini-comp-table thead th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);padding:0 0 8px;border-bottom:2px solid var(--border);text-align:right}
+.mini-comp-table thead th:first-child{text-align:left}
+.mini-comp-table thead th.th-win{color:var(--green)}
+.mini-comp-table tbody td{padding:7px 0;font-size:12px;border-bottom:1px solid var(--border);text-align:right;font-variant-numeric:tabular-nums;color:var(--t1)}
+.mini-comp-table tbody td:first-child{text-align:left;color:var(--t2);font-size:11px}
+.mini-comp-table tbody tr:last-child td{border-bottom:none}
+.mini-comp-table .win-col{font-weight:600;color:var(--green)}
+.mini-comp-table th,.mini-comp-table td{padding-left:10px}
+.mini-comp-table th:first-child,.mini-comp-table td:first-child{padding-left:0}
+
+/* ─── Confidence bar ─── */
+.conf-bar-wrap{margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.06)}
+.conf-bar-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-bottom:4px}
+.conf-bar-labels span:last-child{font-weight:600;color:var(--green)}
+.conf-bar-track{height:5px;background:rgba(0,0,0,.08);border-radius:100px;overflow:hidden}
+.conf-bar-fill{height:100%;border-radius:100px;background:var(--green)}
+
+/* ══════════════════════════════════
+   OPTION 1 — Mirrored stat columns
+══════════════════════════════════ */
+.o1-cols{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.o1-col-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:2px}
+.o1-col-label.winning{color:var(--green);border-bottom-color:var(--green)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.stat-row:last-child{border-bottom:none}
+.stat-name{font-size:12px;color:var(--t2)}
+.stat-val{font-size:13px;font-weight:600;color:var(--t1);font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:5px}
+.stat-val.win-val{color:var(--green)}
+.chip{display:inline-flex;align-items:center;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:700}
+.chip.pos{background:var(--green-lt);color:var(--green)}
+
+/* ══════════════════════════════════
+   OPTION 2 — Comparison table
+══════════════════════════════════ */
+.comp-table{width:100%;border-collapse:collapse}
+.comp-table thead th{padding:9px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);text-align:right;border-bottom:2px solid var(--border)}
+.comp-table thead th:first-child{text-align:left}
+.comp-table thead .th-new{color:var(--green)}
+.comp-table tbody td{padding:9px 12px;font-size:13px;border-bottom:1px solid var(--border);text-align:right;font-variant-numeric:tabular-nums;color:var(--t1)}
+.comp-table tbody td:first-child{text-align:left;color:var(--t2);font-size:12px}
+.comp-table tbody tr:last-child td{border-bottom:none}
+.comp-table .col-new{font-weight:600}
+.comp-table .col-new.pos{color:var(--green)}
+.change-chip{display:inline-flex;align-items:center;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700}
+.change-chip.pos{background:var(--green-lt);color:var(--green)}
+.change-chip.neutral{background:var(--bg);color:var(--t2)}
+.th-new-wrap{display:flex;align-items:center;justify-content:flex-end;gap:5px}
+
+/* ══════════════════════════════════
+   OPTION 3 — Hero metric cards
+══════════════════════════════════ */
+.o3-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.o3-col{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px}
+.o3-col.winning{background:var(--green-lt);border-color:var(--green-bd)}
+.o3-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px}
+.o3-big{font-size:28px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.o3-col.winning .o3-big{color:var(--green)}
+.o3-metric-lbl{font-size:11px;color:var(--t2);margin-bottom:12px}
+.o3-bar{height:5px;background:rgba(0,0,0,.08);border-radius:100px;overflow:hidden;margin-bottom:14px}
+.o3-bar-fill{height:100%;border-radius:100px;background:var(--t3)}
+.o3-col.winning .o3-bar-fill{background:var(--green)}
+.o3-sub{display:grid;grid-template-columns:1fr 1fr;gap:10px 8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
+.o3-sub-lbl{font-size:10px;color:var(--t2);margin-bottom:1px}
+.o3-sub-val{font-size:12px;font-weight:600;color:var(--t1)}
+.imp-badge{display:inline-flex;align-items:center;gap:3px;background:var(--green);color:white;font-size:11px;font-weight:700;padding:3px 8px;border-radius:100px;white-space:nowrap}
+
+/* ══════════════════════════════════
+   OPTION 5 — Result-first banner
+══════════════════════════════════ */
+.o5-winner-banner{background:linear-gradient(135deg,#EDFBF4 0%,#F6FEF9 100%);border:1px solid var(--green-bd);border-radius:8px;padding:18px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.o5-banner-tag{display:inline-flex;align-items:center;gap:5px;background:var(--green);color:white;font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;margin-bottom:7px}
+.o5-banner-tag svg{width:9px;height:9px}
+.o5-banner-title{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:4px}
+.o5-banner-meta{font-size:12px;color:var(--t2);display:flex;gap:12px;flex-wrap:wrap}
+.o5-banner-right{text-align:right;flex-shrink:0}
+.o5-banner-big{font-size:30px;font-weight:700;color:var(--green);line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums}
+.o5-banner-sub{font-size:11px;color:var(--t2)}
+
+/* ══════════════════════════════════
+   OPTION 6 — Champion/Challenger cards
+══════════════════════════════════ */
+.o6-list{display:flex;flex-direction:column;gap:14px}
+.o6-card{border:1px solid var(--border);border-radius:8px;background:white;overflow:hidden;box-shadow:var(--shadow)}
+.o6-card.champion{border-color:var(--green-bd);border-left:3px solid var(--green)}
+.o6-inner{display:grid;grid-template-columns:176px 1fr}
+.o6-thumb-col{border-right:1px solid var(--border);background:#F5F0E8;overflow:hidden}
+.o6-thumb-browser{background:#DDDCDC;padding:4px 6px;display:flex;align-items:center;gap:3px;border-bottom:1px solid #D0D0D0}
+.o6-thumb-dot{width:6px;height:6px;border-radius:50%}
+.o6-thumb-dot:nth-child(1){background:#FF5F57}.o6-thumb-dot:nth-child(2){background:#FEBC2E}.o6-thumb-dot:nth-child(3){background:#28C840}
+.o6-thumb-content{padding:10px;text-align:center}
+.o6-thumb-logo{font-size:7px;font-weight:900;color:#2D2D2D;letter-spacing:.06em;margin-bottom:8px}
+.o6-thumb-title{font-size:8px;font-weight:800;color:#2D2D2D;line-height:1.35;margin-bottom:6px}
+.o6-thumb-cta{display:inline-block;padding:2.5px 10px;font-size:6px;font-weight:800;color:white;border-radius:2px;letter-spacing:.06em;margin-bottom:6px}
+.o6-thumb-img{height:54px;background:linear-gradient(160deg,#DFD6C4,#B8A888);border-radius:3px 3px 0 0;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+.o6-thumb-cat{width:44px;height:38px;background:linear-gradient(to bottom,#C8B890,#B8A070);border-radius:48% 48% 0 0;position:relative;margin-bottom:-2px}
+.o6-thumb-cat::before,.o6-thumb-cat::after{content:'';position:absolute;top:-7px;width:9px;height:11px;background:#C8B890;border-radius:50% 50% 0 0}
+.o6-thumb-cat::before{left:6px;transform:rotate(-18deg)}.o6-thumb-cat::after{right:6px;transform:rotate(18deg)}
+.o6-data-col{padding:16px 20px}
+.o6-data-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.o6-variant-name{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.o6-primary{margin-bottom:14px}
+.o6-primary-lbl{font-size:11px;color:var(--t2);margin-bottom:2px}
+.o6-primary-val{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--t1)}
+.o6-card.champion .o6-primary-val{color:var(--green)}
+.o6-secondary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.o6-sec-lbl{font-size:10px;color:var(--t2);margin-bottom:2px}
+.o6-sec-val{font-size:13px;font-weight:600;color:var(--t1);font-variant-numeric:tabular-nums}
+.o6-sec-val.pos{color:var(--green)}
+
+/* Winner announce bar */
+.winner-announce-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,#EDFBF4 0%,#F4FEF8 100%);
+  border:1.5px solid rgba(42,144,87,.25);
+  border-radius:10px;padding:14px 18px;margin-bottom:20px;gap:16px;
+}
+.winner-announce-left{display:flex;align-items:center;gap:10px}
+.winner-announce-text{font-size:13px;color:#1A1A1A;line-height:1.45}
+.winner-announce-text strong{font-weight:700}
+.winner-announce-btn{
+  background:#2A9057;color:white;border:none;
+  border-radius:100px;padding:9px 20px;
+  font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;
+  white-space:nowrap;flex-shrink:0;transition:background .15s;
+}
+.winner-announce-btn:hover{background:#1e7040}
+@keyframes floatIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* ── Product page preview thumbnails ── */
+.pp-nav{display:flex;justify-content:space-between;align-items:center;padding:5px 8px;border-bottom:1px solid rgba(0,0,0,.06)}
+.pp-nav-logo{font-size:7px;font-weight:900;color:#1A1A1A;letter-spacing:.04em}
+.pp-nav-links{display:flex;gap:5px}
+.pp-nav-link{width:18px;height:2px;background:rgba(0,0,0,.12);border-radius:2px}
+/* Original: large image + overlapping info card */
+.pp-orig{background:#FAF7F0;display:flex;flex-direction:column}
+.pp-orig-body{position:relative;flex:1}
+.pp-orig-image{width:100%;height:82px;background:linear-gradient(160deg,#6B8F7E 0%,#4E7A69 40%,#3A6355 100%);display:flex;align-items:flex-start;justify-content:flex-start}
+.pp-orig-card{position:absolute;right:7px;top:8px;background:white;border:1px solid rgba(0,0,0,.12);border-radius:3px;padding:5px 6px;width:44%;box-shadow:0 2px 8px rgba(0,0,0,.14)}
+.pp-orig-card-title{font-size:5.5px;font-weight:800;color:#1A1A1A;line-height:1.3;margin-bottom:2px}
+.pp-orig-card-price{font-size:6px;font-weight:700;color:#1A1A1A;margin-bottom:5px}
+.pp-orig-card-btn{width:100%;padding:2.5px 0;text-align:center;background:#F5A623;color:white;font-size:4.5px;font-weight:800;border-radius:100px;letter-spacing:.03em}
+.pp-orig-thumbs{display:flex;gap:3px;padding:5px 8px}
+.pp-orig-thumb{width:14px;height:14px;background:#C8BCA0;border-radius:2px;border:1.5px solid transparent}
+.pp-orig-thumb:first-child{border-color:#5A5A5A}
+.pp-orig-thumb:nth-child(2){background:#B0C4B8}
+/* New Version: left thumbs + big center image + right info panel */
+.pp-new{background:#FAF7F0;display:flex;flex-direction:column}
+.pp-new-body{display:flex;flex:1;min-height:90px}
+.pp-new-thumbs-col{width:16px;display:flex;flex-direction:column;gap:3px;padding:5px 2px;background:#FAF7F0;border-right:1px solid rgba(0,0,0,.06)}
+.pp-new-thumb{width:12px;height:14px;background:#D5CFC6;border-radius:1px;border:1px solid rgba(0,0,0,.08)}
+.pp-new-thumb.sel{border-color:#5A5A5A}
+.pp-new-image{flex:1;background:linear-gradient(160deg,#B8CAAA 0%,#8FA882 50%,#7A9870 100%);position:relative;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+.pp-new-vase{width:20px;height:30px;background:linear-gradient(to bottom,#F0EDE6,#E8E4DC);border-radius:38% 38% 28% 28% / 30% 30% 20% 20%;margin-bottom:4px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.pp-new-info{width:40%;padding:6px 5px;background:#FAF7F0;border-left:1px solid rgba(0,0,0,.06);display:flex;flex-direction:column;gap:3px}
+.pp-new-info-title{font-size:5.5px;font-weight:800;color:#1A1A1A;line-height:1.3}
+.pp-new-info-price{font-size:6px;font-weight:700;color:#1A1A1A}
+.pp-new-info-btn-red{width:100%;padding:2.5px 0;text-align:center;background:#E52A1A;color:white;font-size:4.5px;font-weight:800;border-radius:100px;letter-spacing:.03em}
+.pp-new-info-btn-blk{width:100%;padding:2.5px 0;text-align:center;background:#1A1A1A;color:white;font-size:4.5px;font-weight:800;border-radius:100px;letter-spacing:.03em}
+
+/* ── Status badge: Results Ready ── */
+.status-results-ready{background:#EDF0F5;color:#4F5E71;border:1px solid #D3D9E1}
+
+/* ── Preview hover overlay ── */
+.preview-frame{position:relative}
+.preview-overlay{position:absolute;inset:0;background:rgba(0,0,0,.44);opacity:0;pointer-events:none;transition:opacity .18s;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:5px;z-index:10}
+.preview-frame:hover .preview-overlay{opacity:1;pointer-events:auto}
+.pv-action{height:34px;padding:0 14px;border-radius:100px;background:white;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;color:#1A1A1A;font-size:12px;font-weight:700;font-family:inherit;box-shadow:0 2px 10px rgba(0,0,0,.25);transition:transform .15s,box-shadow .15s,background .1s}
+.pv-action:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.3);background:#F5F5F5}
+.pv-action svg{width:13px;height:13px;flex-shrink:0}
+
+/* ── Lightbox ── */
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s;backdrop-filter:blur(3px)}
+.lb.open{opacity:1;pointer-events:auto}
+.lb-inner{background:white;border-radius:12px;overflow:hidden;width:600px;max-width:92vw;box-shadow:0 32px 80px rgba(0,0,0,.4);transform:scale(.93);transition:transform .22s cubic-bezier(.16,1,.3,1)}
+.lb.open .lb-inner{transform:scale(1)}
+.lb-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)}
+.lb-title-text{font-size:13px;font-weight:700;color:var(--t1)}
+.lb-close-btn{width:26px;height:26px;border:none;background:var(--bg);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);transition:background .12s}
+.lb-close-btn:hover{background:var(--border)}
+.lb-body{padding:20px;display:flex;justify-content:center;background:var(--bg);min-height:180px;align-items:center}
+#lb-content{border-radius:8px;overflow:hidden;border:1px solid var(--border);position:relative}
+
+/* ── Page-level 3-dot dropdown ── */
+.page-menu-wrap{position:relative}
+.page-dot-menu{position:absolute;top:calc(100% + 6px);right:0;background:white;border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);min-width:190px;z-index:999;overflow:hidden;display:none}
+.page-dot-menu.open{display:block;animation:menuIn .15s cubic-bezier(.16,1,.3,1)}
+@keyframes menuIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.pdm-item{display:flex;align-items:center;gap:9px;padding:9px 14px;font-size:13px;color:var(--t1);cursor:pointer;transition:background .1s}
+.pdm-item:hover{background:var(--bg)}
+.pdm-item svg{width:14px;height:14px;color:var(--t2);flex-shrink:0}
+.pdm-sep{height:1px;background:var(--border);margin:3px 0}
+.pdm-item.danger{color:#D93025}
+.pdm-item.danger svg{color:#D93025}
+</style>
+</head>
+<body>
+
+<!-- ── Exploration bar ── -->
+<div class="exp-bar">
+  <span class="exp-label">Explorations</span>
+  <div class="exp-pills">
+    <button class="exp-btn active" onclick="setOpt(1,this)">1 · Mirrored</button>
+    <button class="exp-btn" onclick="setOpt(2,this)">2 · Table</button>
+    <button class="exp-btn" onclick="setOpt(3,this)">3 · Hero metrics</button>
+    <button class="exp-btn" onclick="setOpt(4,this)">4 · Stacked</button>
+    <button class="exp-btn" onclick="setOpt(5,this)">5 · Result-first</button>
+    <button class="exp-btn" onclick="setOpt(6,this)">6 · Variant cards</button>
+    <button class="exp-btn highlight" onclick="setOpt(7,this)">7 · Best ★</button>
+  </div>
+  <span class="exp-hint">Product page layout</span>
+</div>
+
+<!-- ── WIX Top Nav ── -->
+<nav class="wix-nav">
+  <span class="wix-logo">WIX <b>STUDIO</b></span>
+  <div class="site-pill" onclick="window.location.href='wix-editor.html'" title="Open Editor"><div class="site-abbr">ST</div>Site Name<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 4l3 3 3-3" stroke="#A8B3BD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="nav-links"><span class="nav-link">Resources</span><span class="nav-link">Community</span><span class="nav-link">Help</span></div>
+  <div class="nav-right">
+    <div class="nav-search"><svg viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Search for tools, apps &amp; more...</div>
+    <button class="upgrade-btn">Upgrade</button>
+    <div class="nav-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M3 4h10M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="nav-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M2 12l4-4 3 3 5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="nav-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 8h4M8 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="avatar">ST</div>
+  </div>
+</nav>
+
+<!-- ── Shell ── -->
+<div class="wix-shell">
+
+  <!-- ── Sidebar ── -->
+  <aside class="wix-sb">
+    <div class="sb-setup">Let's set up your business<svg viewBox="0 0 10 10" fill="none"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="sb-progress"><div class="sb-progress-fill"></div></div>
+    <div class="sb-setup-sub">0/4 completed</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M6 8h4M8 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Setup</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1.5L2 6v8h4V9h4v5h4V6L8 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Home</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 4V3a3 3 0 016 0v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Getting Paid</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>All Payments</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Apps</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M1 6h14" stroke="currentColor" stroke-width="1.5"/><circle cx="4" cy="9" r="1" fill="currentColor"/></svg>Site &amp; Mobile App<svg class="chev" viewBox="0 0 10 10" fill="none"><path d="M3 4l2 2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><path d="M2 12l3-3 2 2 3-3 2 2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Inbox</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><circle cx="5.5" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="10.5" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>Customers &amp; Leads<svg class="chev" viewBox="0 0 10 10" fill="none"><path d="M3 4l2 2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><path d="M2 12l4-4 3 3 5-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Marketing<svg class="chev" viewBox="0 0 10 10" fill="none"><path d="M3 4l2 2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="sb-item open"><svg viewBox="0 0 16 16" fill="none"><path d="M2 14l3-5 2 3 3-4 3 3V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Analytics<svg class="chev" viewBox="0 0 10 10" fill="none"><path d="M3 6l2-2 2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="sb-sub">
+      <div class="sb-sub-item">Highlights</div><div class="sb-sub-item">Real-time</div>
+      <div class="sb-sub-item">Traffic</div><div class="sb-sub-item">Behavior</div>
+      <div class="sb-sub-item active">Experiments</div><div class="sb-sub-item">Marketing</div>
+      <div class="sb-sub-item">Session Recordings</div><div class="sb-sub-item">Insights</div>
+      <div class="sb-sub-item">Benchmarks</div>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <main class="wix-main">
+
+    <div class="breadcrumb">
+      <a href="testing-page.html">Experiments</a><span class="bc-sep">›</span><span>Product page layout</span>
+    </div>
+    <div class="page-head">
+      <div>
+        <div class="page-title">Product page layout</div>
+        <div class="page-meta">Started: April 20 at 17:22<span class="sep">·</span>Ended: May 13 at 14:10</div>
+      </div>
+      <div class="head-actions">
+        <div class="page-menu-wrap">
+          <div class="icon-btn" onclick="togglePageMenu(event)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="13" r="1.2" fill="currentColor"/></svg></div>
+          <div class="page-dot-menu" id="page-dot-menu">
+            <div class="pdm-item" onclick="showToast('Opening test settings...');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Edit test settings</div>
+            <div class="pdm-item" onclick="showToast('Test duplicated.');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Duplicate test</div>
+            <div class="pdm-item" onclick="showToast('Exporting results...');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Export results as CSV</div>
+            <div class="pdm-sep"></div>
+            <div class="pdm-item danger" onclick="showToast('Test stopped.');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><rect x="4" y="4" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>Stop test</div>
+            <div class="pdm-item danger" onclick="showToast('Test deleted.');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><path d="M3 5h10M6 5V3h4v2M12 5l-.8 8H4.8L4 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Delete test</div>
+          </div>
+        </div>
+        <button class="primary-btn" onclick="showWinnerToast()">Implement winner version</button>
+      </div>
+    </div>
+
+    <!-- Winner banner -->
+    <div class="winner-announce-bar">
+      <div class="winner-announce-left">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#2A9057" opacity=".15"/><path d="M5 9.5l3 3 5-6" stroke="#2A9057" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:3px">New Version is a winner</div>
+          <div style="font-size:13px;color:var(--t2)">Success rate improved from 8.1% to 12.3% — based on 1,789 visitors over 13 days.</div>
+        </div>
+      </div>
+      <button class="winner-announce-btn" onclick="showWinnerToast()">Apply New Version</button>
+    </div>
+
+    <!-- Toast -->
+    <div id="winner-toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:white;padding:12px 22px;border-radius:100px;font-size:13px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.35);display:none;white-space:nowrap;z-index:999;animation:floatIn .3s cubic-bezier(.16,1,.3,1)">
+      Winner version applied to your live site
+    </div>
+
+    <!-- ════════════════════════════════════
+         BASE LAYOUT — Options 1, 2, 3
+    ════════════════════════════════════ -->
+    <div id="base-layout">
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-head">Test Overview</div>
+          <div class="card-body">
+            <div class="variants-row">
+              <div>
+                <div class="v-label">Original</div>
+                <div class="preview-frame">
+                  <div class="p-browser"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-url">d-valera.com</div></div>
+                  <div class="pp-orig"><div class="pp-nav"><span class="pp-nav-logo">D. VALERA</span><div class="pp-nav-links"><div class="pp-nav-link"></div><div class="pp-nav-link"></div><div class="pp-nav-link"></div></div></div><div class="pp-orig-body"><div class="pp-orig-image"></div><div class="pp-orig-card"><div class="pp-orig-card-title">Knitted Golf Sweater</div><div class="pp-orig-card-price">275,00 грн</div><div class="pp-orig-card-btn">Add to Cart</div></div><div class="pp-orig-thumbs"><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div></div></div></div>
+                </div>
+              </div>
+              <div>
+                <div class="v-label">New Version<span class="winner-badge"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4.5l2 2 3-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Winner</span></div>
+                <div class="preview-frame winning">
+                  <div class="p-browser"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-url">d-valera.com</div></div>
+                  <div class="pp-new"><div class="pp-nav"><span class="pp-nav-logo">D. VALERA</span><div class="pp-nav-links"><div class="pp-nav-link"></div><div class="pp-nav-link"></div><div class="pp-nav-link"></div></div></div><div class="pp-new-body"><div class="pp-new-thumbs-col"><div class="pp-new-thumb sel"></div><div class="pp-new-thumb"></div></div><div class="pp-new-image"><div class="pp-new-vase"></div></div><div class="pp-new-info"><div class="pp-new-info-title">Ceramic Flower Vase</div><div class="pp-new-info-price">270,00 грн</div><div class="pp-new-info-btn-red">Add to Cart</div><div class="pp-new-info-btn-blk">Buy Now</div></div></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="opt-divider"></div>
+            <!-- Option 1 -->
+            <div class="opt-stats active" id="stats-1">
+              <div class="o1-cols">
+                <div>
+                  <div class="o1-col-label">Original</div>
+                  <div class="stat-row"><span class="stat-name">Visitors</span><span class="stat-val">4,271</span></div>
+                  <div class="stat-row"><span class="stat-name">Conversions</span><span class="stat-val">342</span></div>
+                  <div class="stat-row"><span class="stat-name">Conversion rate</span><span class="stat-val">8.01%</span></div>
+                  <div class="stat-row"><span class="stat-name">Bounce rate</span><span class="stat-val">64.2%</span></div>
+                  <div class="stat-row"><span class="stat-name">Avg. session</span><span class="stat-val">1m 48s</span></div>
+                </div>
+                <div>
+                  <div class="o1-col-label winning">New Version · Winner</div>
+                  <div class="stat-row"><span class="stat-name">Visitors</span><span class="stat-val">4,388</span></div>
+                  <div class="stat-row"><span class="stat-name">Conversions</span><span class="stat-val win-val">541</span></div>
+                  <div class="stat-row"><span class="stat-name">Conversion rate</span><span class="stat-val win-val">12.33% <span class="chip pos">+53.9%</span></span></div>
+                  <div class="stat-row"><span class="stat-name">Bounce rate</span><span class="stat-val win-val">57.8% <span class="chip pos">−9.9%</span></span></div>
+                  <div class="stat-row"><span class="stat-name">Avg. session</span><span class="stat-val win-val">2m 13s <span class="chip pos">+22.7%</span></span></div>
+                </div>
+              </div>
+            </div>
+            <!-- Option 2 -->
+            <div class="opt-stats" id="stats-2">
+              <table class="comp-table">
+                <thead><tr><th>Metric</th><th>Original</th><th class="th-new"><div class="th-new-wrap">New Version<span class="winner-badge" style="font-size:9px">Winner</span></div></th><th>Change</th></tr></thead>
+                <tbody>
+                  <tr><td>Visitors</td><td>4,271</td><td class="col-new">4,388</td><td><span class="change-chip pos">+2.7%</span></td></tr>
+                  <tr><td>Conversions</td><td>342</td><td class="col-new pos">541</td><td><span class="change-chip pos">+58.2%</span></td></tr>
+                  <tr><td>Conversion rate</td><td>8.01%</td><td class="col-new pos">12.33%</td><td><span class="change-chip pos">+53.9%</span></td></tr>
+                  <tr><td>Bounce rate</td><td>64.2%</td><td class="col-new pos">57.8%</td><td><span class="change-chip pos">−9.9%</span></td></tr>
+                  <tr><td>Avg. session</td><td>1m 48s</td><td class="col-new pos">2m 13s</td><td><span class="change-chip pos">+22.7%</span></td></tr>
+                  <tr><td>Statistical confidence</td><td>—</td><td class="col-new pos">97.3%</td><td><span class="change-chip neutral">—</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Option 3 -->
+            <div class="opt-stats" id="stats-3">
+              <div class="o3-cols">
+                <div class="o3-col"><div class="o3-top"><div><div class="o3-big">8.01%</div><div class="o3-metric-lbl">Conversion rate</div></div></div><div class="o3-bar"><div class="o3-bar-fill" style="width:65%"></div></div><div class="o3-sub"><div><div class="o3-sub-lbl">Visitors</div><div class="o3-sub-val">4,271</div></div><div><div class="o3-sub-lbl">Conversions</div><div class="o3-sub-val">342</div></div><div><div class="o3-sub-lbl">Bounce rate</div><div class="o3-sub-val">64.2%</div></div><div><div class="o3-sub-lbl">Avg. session</div><div class="o3-sub-val">1m 48s</div></div></div></div>
+                <div class="o3-col winning"><div class="o3-top"><div><div class="o3-big">12.33%</div><div class="o3-metric-lbl">Conversion rate</div></div><span class="imp-badge">+53.9%</span></div><div class="o3-bar"><div class="o3-bar-fill" style="width:100%"></div></div><div class="o3-sub"><div><div class="o3-sub-lbl">Visitors</div><div class="o3-sub-val">4,388</div></div><div><div class="o3-sub-lbl">Conversions</div><div class="o3-sub-val">541</div></div><div><div class="o3-sub-lbl">Bounce rate</div><div class="o3-sub-val">57.8%</div></div><div><div class="o3-sub-lbl">Confidence</div><div class="o3-sub-val">97.3%</div></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Details -->
+        <div class="card"><div class="card-head">Details</div><div class="card-body"><div class="detail-row"><div class="detail-lbl">Status</div><div class="detail-val"><span class="status-badge status-results-ready">Results Ready</span></div></div><div class="detail-row"><div class="detail-lbl" style="display:flex;align-items:center;gap:4px">Goal <span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1.5px solid var(--t3);border-radius:50%;font-size:8px;font-weight:800;color:var(--t3);cursor:pointer">i</span></div><div class="detail-val">Click on Add to Cart button</div></div><div class="detail-row"><div class="detail-lbl">Test page</div><div class="detail-val">Home</div></div><div class="detail-row"><div class="detail-lbl">Test started</div><div class="detail-val">April 20, 2026 at 17:22</div></div><div class="detail-row" style="border-bottom:none"><div class="detail-lbl">Test Duration</div><div class="detail-val">13 days</div></div></div></div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         OPTION 4 — Stacked previews + data inside card
+         UX: Bigger visuals left, metrics right — one card, no split.
+    ════════════════════════════════════ -->
+    <div class="alt-layout" id="layout-4">
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-head">Test Overview</div>
+          <div class="card-col-body">
+            <!-- Left: stacked previews -->
+            <div class="card-col-left">
+              <div class="v-label">Original</div>
+              <div class="preview-frame">
+                <div class="p-browser"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-url">d-valera.com</div></div>
+                <div class="pp-orig"><div class="pp-nav"><span class="pp-nav-logo">D. VALERA</span><div class="pp-nav-links"><div class="pp-nav-link"></div><div class="pp-nav-link"></div><div class="pp-nav-link"></div></div></div><div class="pp-orig-body"><div class="pp-orig-image"></div><div class="pp-orig-card"><div class="pp-orig-card-title">Knitted Golf Sweater</div><div class="pp-orig-card-price">275,00 грн</div><div class="pp-orig-card-btn">Add to Cart</div></div><div class="pp-orig-thumbs"><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div></div></div></div>
+              </div>
+              <div style="height:14px"></div>
+              <div class="v-label">New Version<span class="winner-badge"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4.5l2 2 3-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Winner</span></div>
+              <div class="preview-frame winning">
+                <div class="p-browser"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-url">d-valera.com</div></div>
+                <div class="pp-new"><div class="pp-nav"><span class="pp-nav-logo">D. VALERA</span><div class="pp-nav-links"><div class="pp-nav-link"></div><div class="pp-nav-link"></div><div class="pp-nav-link"></div></div></div><div class="pp-new-body"><div class="pp-new-thumbs-col"><div class="pp-new-thumb sel"></div><div class="pp-new-thumb"></div></div><div class="pp-new-image"><div class="pp-new-vase"></div></div><div class="pp-new-info"><div class="pp-new-info-title">Ceramic Flower Vase</div><div class="pp-new-info-price">270,00 грн</div><div class="pp-new-info-btn-red">Add to Cart</div><div class="pp-new-info-btn-blk">Buy Now</div></div></div></div>
+              </div>
+            </div>
+            <!-- Right: data -->
+            <div class="card-col-right">
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:10px">Conversion rate — goal metric</div>
+              <div class="metric-bars">
+                <div class="metric-bar-item">
+                  <div class="mbi-labels"><span class="mbi-name">Original</span><span class="mbi-val">8.01%</span></div>
+                  <div class="mbi-track"><div class="mbi-fill" style="width:65%;background:var(--t3)"></div></div>
+                </div>
+                <div class="metric-bar-item">
+                  <div class="mbi-labels"><span class="mbi-name win">New Version</span><span class="mbi-val win">12.33%</span></div>
+                  <div class="mbi-track"><div class="mbi-fill" style="width:100%;background:var(--green)"></div></div>
+                </div>
+              </div>
+              <div class="imp-row"><span class="imp-lbl">Improvement</span><span class="imp-val">+53.9%</span></div>
+              <table class="mini-comp-table">
+                <thead><tr><th>Metric</th><th>Orig.</th><th class="th-win">New</th></tr></thead>
+                <tbody>
+                  <tr><td>Visitors</td><td>4,271</td><td>4,388</td></tr>
+                  <tr><td>Conversions</td><td>342</td><td class="win-col">541</td></tr>
+                  <tr><td>Bounce rate</td><td>64.2%</td><td class="win-col">57.8%</td></tr>
+                  <tr><td>Avg. session</td><td>1m 48s</td><td class="win-col">2m 13s</td></tr>
+                  <tr><td>Confidence</td><td>—</td><td class="win-col">97.3%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- Details -->
+        <div class="card"><div class="card-head">Details</div><div class="card-body"><div class="detail-row"><div class="detail-lbl">Status</div><div class="detail-val"><span class="status-badge status-results-ready">Results Ready</span></div></div><div class="detail-row"><div class="detail-lbl" style="display:flex;align-items:center;gap:4px">Goal <span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1.5px solid var(--t3);border-radius:50%;font-size:8px;font-weight:800;color:var(--t3);cursor:pointer">i</span></div><div class="detail-val">Click on Add to Cart button</div></div><div class="detail-row"><div class="detail-lbl">Test page</div><div class="detail-val">Home</div></div><div class="detail-row"><div class="detail-lbl">Test started</div><div class="detail-val">April 20, 2026 at 17:22</div></div><div class="detail-row" style="border-bottom:none"><div class="detail-lbl">Test Duration</div><div class="detail-val">13 days</div></div></div></div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         OPTION 5 — Result-first winner banner
+    ════════════════════════════════════ -->
+    <div class="alt-layout" id="layout-5">
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-head">Test Overview</div>
+          <div class="card-body">
+            <div class="o5-winner-banner">
+              <div>
+                <div class="o5-banner-tag"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 5l2 2 4-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>New Version wins</div>
+                <div class="o5-banner-title">Brighter CTA drove 53.9% more category visits</div>
+                <div class="o5-banner-meta"><span>8,659 total visitors</span><span>13 days</span><span>Goal: Category page</span></div>
+                <div class="conf-bar-wrap"><div class="conf-bar-labels"><span>Statistical confidence</span><span>97.3%</span></div><div class="conf-bar-track"><div class="conf-bar-fill" style="width:97.3%"></div></div></div>
+              </div>
+              <div class="o5-banner-right"><div class="o5-banner-big">+53.9%</div><div class="o5-banner-sub">conversion rate lift</div><div style="margin-top:10px;font-size:11px;color:var(--t2)">8.01% → <strong style="color:var(--green)">12.33%</strong></div></div>
+            </div>
+            <div class="variants-row" style="margin-bottom:20px">
+              <div><div class="v-label">Original</div><div class="preview-frame"><div class="p-browser"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-url">d-valera.com</div></div><div class="pp-orig"><div class="pp-nav"><span class="pp-nav-logo">D. VALERA</span><div class="pp-nav-links"><div class="pp-nav-link"></div><div class="pp-nav-link"></div><div class="pp-nav-link"></div></div></div><div class="pp-orig-body"><div class="pp-orig-image"></div><div class="pp-orig-card"><div class="pp-orig-card-title">Knitted Golf Sweater</div><div class="pp-orig-card-price">275,00 грн</div><div class="pp-orig-card-btn">Add to Cart</div></div><div class="pp-orig-thumbs"><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div></div></div></div></div></div>
+              <div><div class="v-label">New Version<span class="winner-badge"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4.5l2 2 3-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Winner</span></div><div class="preview-frame winning"><div class="p-browser"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-url">d-valera.com</div></div><div class="pp-new"><div class="pp-nav"><span class="pp-nav-logo">D. VALERA</span><div class="pp-nav-links"><div class="pp-nav-link"></div><div class="pp-nav-link"></div><div class="pp-nav-link"></div></div></div><div class="pp-new-body"><div class="pp-new-thumbs-col"><div class="pp-new-thumb sel"></div><div class="pp-new-thumb"></div></div><div class="pp-new-image"><div class="pp-new-vase"></div></div><div class="pp-new-info"><div class="pp-new-info-title">Ceramic Flower Vase</div><div class="pp-new-info-price">270,00 грн</div><div class="pp-new-info-btn-red">Add to Cart</div><div class="pp-new-info-btn-blk">Buy Now</div></div></div></div></div></div>
+            </div>
+            <div class="opt-divider" style="margin-top:0"></div>
+            <table class="comp-table">
+              <thead><tr><th>Metric</th><th>Original</th><th class="th-new"><div class="th-new-wrap">New Version<span class="winner-badge" style="font-size:9px">Winner</span></div></th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td>Visitors</td><td>4,271</td><td class="col-new">4,388</td><td><span class="change-chip pos">+2.7%</span></td></tr>
+                <tr><td>Conversions</td><td>342</td><td class="col-new pos">541</td><td><span class="change-chip pos">+58.2%</span></td></tr>
+                <tr><td>Conversion rate</td><td>8.01%</td><td class="col-new pos">12.33%</td><td><span class="change-chip pos">+53.9%</span></td></tr>
+                <tr><td>Bounce rate</td><td>64.2%</td><td class="col-new pos">57.8%</td><td><span class="change-chip pos">−9.9%</span></td></tr>
+                <tr><td>Avg. session</td><td>1m 48s</td><td class="col-new pos">2m 13s</td><td><span class="change-chip pos">+22.7%</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card"><div class="card-head">Details</div><div class="card-body"><div class="detail-row"><div class="detail-lbl">Status</div><div class="detail-val"><span class="status-badge status-results-ready">Results Ready</span></div></div><div class="detail-row"><div class="detail-lbl" style="display:flex;align-items:center;gap:4px">Goal <span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1.5px solid var(--t3);border-radius:50%;font-size:8px;font-weight:800;color:var(--t3);cursor:pointer">i</span></div><div class="detail-val">Click on Add to Cart button</div></div><div class="detail-row"><div class="detail-lbl">Test page</div><div class="detail-val">Home</div></div><div class="detail-row"><div class="detail-lbl">Test started</div><div class="detail-val">April 20, 2026 at 17:22</div></div><div class="detail-row" style="border-bottom:none"><div class="detail-lbl">Test Duration</div><div class="detail-val">13 days</div></div></div></div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         OPTION 6 — Champion/Challenger cards
+    ════════════════════════════════════ -->
+    <div class="alt-layout" id="layout-6">
+      <div class="content-grid">
+        <div class="o6-list">
+          <div class="o6-card">
+            <div class="o6-inner">
+              <div class="o6-thumb-col"><div class="o6-thumb-browser"><div class="o6-thumb-dot"></div><div class="o6-thumb-dot"></div><div class="o6-thumb-dot"></div></div><div class="pp-orig" style="flex:1;min-height:0"><div class="pp-nav"><span class="pp-nav-logo">D. VALERA</span></div><div class="pp-orig-body"><div class="pp-orig-image"></div><div class="pp-orig-card"><div style="font-size:6px;font-weight:800;color:#2D2D2D;margin-bottom:2px">Knitted Golf Sweater</div><div style="font-size:5px;color:#888;margin-bottom:4px">#8FA882 · S / M / L</div><div class="pp-orig-card-btn">Add to Cart</div></div></div></div></div>
+              <div class="o6-data-col"><div class="o6-data-header"><div class="o6-variant-name">Original</div><span style="font-size:11px;color:var(--t3)">Challenger</span></div><div class="o6-primary"><div class="o6-primary-lbl">Conversion rate</div><div class="o6-primary-val">8.01%</div></div><div class="o6-secondary"><div><div class="o6-sec-lbl">Visitors</div><div class="o6-sec-val">4,271</div></div><div><div class="o6-sec-lbl">Conversions</div><div class="o6-sec-val">342</div></div><div><div class="o6-sec-lbl">Bounce rate</div><div class="o6-sec-val">64.2%</div></div><div><div class="o6-sec-lbl">Avg. session</div><div class="o6-sec-val">1m 48s</div></div></div></div>
+            </div>
+          </div>
+          <div class="o6-card champion">
+            <div class="o6-inner">
+              <div class="o6-thumb-col" style="border-right-color:rgba(42,144,87,.2)"><div class="o6-thumb-browser"><div class="o6-thumb-dot"></div><div class="o6-thumb-dot"></div><div class="o6-thumb-dot"></div></div><div class="pp-new" style="flex:1;min-height:0"><div class="pp-nav"><span class="pp-nav-logo">D. VALERA</span></div><div class="pp-new-body"><div class="pp-new-thumbs-col"><div class="pp-new-vase" style="width:12px;height:18px;margin-bottom:2px"></div><div class="pp-new-vase" style="width:12px;height:18px;opacity:.5"></div></div><div class="pp-new-image"></div><div class="pp-new-info"><div style="font-size:5.5px;font-weight:800;color:#2D2D2D;margin-bottom:2px">Ceramic Flower Vase</div><div style="font-size:5px;color:#888;margin-bottom:3px">$48.00</div><div class="pp-new-info-btn-blk" style="font-size:5px;padding:2px 5px">Add to Cart</div></div></div></div></div>
+              <div class="o6-data-col" style="background:#FAFFFE"><div class="o6-data-header"><div class="o6-variant-name">New Version<span class="winner-badge"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4.5l2 2 3-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Winner</span></div><span style="font-size:12px;font-weight:700;color:var(--green);background:var(--green-lt);padding:3px 9px;border-radius:4px">+53.9%</span></div><div class="o6-primary"><div class="o6-primary-lbl">Conversion rate</div><div class="o6-primary-val">12.33%</div></div><div class="o6-secondary"><div><div class="o6-sec-lbl">Visitors</div><div class="o6-sec-val">4,388</div></div><div><div class="o6-sec-lbl">Conversions</div><div class="o6-sec-val pos">541</div></div><div><div class="o6-sec-lbl">Bounce rate</div><div class="o6-sec-val pos">57.8%</div></div><div><div class="o6-sec-lbl">Confidence</div><div class="o6-sec-val">97.3%</div></div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card"><div class="card-head">Details</div><div class="card-body"><div class="detail-row"><div class="detail-lbl">Status</div><div class="detail-val"><span class="status-badge status-results-ready">Results Ready</span></div></div><div class="detail-row"><div class="detail-lbl" style="display:flex;align-items:center;gap:4px">Goal <span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1.5px solid var(--t3);border-radius:50%;font-size:8px;font-weight:800;color:var(--t3);cursor:pointer">i</span></div><div class="detail-val">Click on Add to Cart button</div></div><div class="detail-row"><div class="detail-lbl">Test page</div><div class="detail-val">Home</div></div><div class="detail-row"><div class="detail-lbl">Test started</div><div class="detail-val">April 20, 2026 at 17:22</div></div><div class="detail-row" style="border-bottom:none"><div class="detail-lbl">Test Duration</div><div class="detail-val">13 days</div></div></div></div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         OPTION 7 — Best ★
+         Combines: Result-first clarity (O5) + internal card split with
+         stacked bigger previews (O4) + WIX-exclusive diff annotation
+         + action anchored to the result signal.
+
+         Design principles applied:
+         1. Outcome first — result strip answers "did it work?" before evidence
+         2. Visual context — stacked previews bigger, diff annotation names the change
+         3. Data as proof — bars + improvement + table after the verdict, not before
+         4. Action proximity — Apply button lives next to the confidence signal
+         5. No redundancy — Details integrated into result strip meta, sidebar trimmed
+    ════════════════════════════════════ -->
+    <div class="alt-layout active" id="layout-7">
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-head">Test Overview</div>
+
+          <!-- Blue winner banner — matches spec -->
+          <div style="margin:0 20px 20px;background:#EDF3FF;border:1px solid rgba(17,109,255,.15);border-radius:8px;padding:16px 20px">
+            <div style="font-size:15px;font-weight:700;color:#1A1A1A;margin-bottom:6px">New Version is a winner</div>
+            <div style="font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:14px">More visitors clicked Add to Cart — up from 8.1% to 12.3%, based on 1,789 visitors over 13 days.</div>
+            <button onclick="showWinnerToast()" style="border:1.5px solid #C8CBD0;background:white;border-radius:100px;padding:7px 18px;font-size:13px;color:var(--t1);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px">Apply New Version</button>
+          </div>
+
+          <!-- Side-by-side previews + comparison table -->
+          <div class="card-body" style="padding-top:0">
+            <div class="variants-row">
+              <!-- Original -->
+              <div>
+                <div class="v-label" style="margin-bottom:8px">Original</div>
+                <div class="preview-frame">
+                  <div class="p-browser"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-url">d-valera.com</div></div>
+                  <div class="pp-orig"><div class="pp-nav"><span class="pp-nav-logo">D. VALERA</span><div class="pp-nav-links"><div class="pp-nav-link"></div><div class="pp-nav-link"></div><div class="pp-nav-link"></div></div></div><div class="pp-orig-body"><div class="pp-orig-image"></div><div class="pp-orig-card"><div class="pp-orig-card-title">Knitted Golf Sweater</div><div class="pp-orig-card-price">275,00 грн</div><div class="pp-orig-card-btn">Add to Cart</div></div><div class="pp-orig-thumbs"><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div><div class="pp-orig-thumb"></div></div></div></div>
+                </div>
+                <div style="margin-top:14px">
+                  <div class="stat-row"><span class="stat-name">Click on Add to Cart</span><span class="stat-val">72</span></div>
+                  <div class="stat-row"><span class="stat-name">Success Rate <span style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border:1.5px solid #A8B3BD;border-radius:50%;font-size:7px;font-weight:800;color:#A8B3BD;vertical-align:middle;line-height:1">i</span></span><span class="stat-val">8.1%</span></div>
+                  <div class="stat-row"><span class="stat-name">Bounce Rate <span style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border:1.5px solid #A8B3BD;border-radius:50%;font-size:7px;font-weight:800;color:#A8B3BD;vertical-align:middle;line-height:1">i</span></span><span class="stat-val">64.2%</span></div>
+                  <div class="stat-row" style="border-bottom:none"><span class="stat-name">Visitors</span><span class="stat-val">893</span></div>
+                </div>
+              </div>
+              <!-- New Version -->
+              <div>
+                <div class="v-label" style="margin-bottom:8px">New Version<span class="winner-badge"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4.5l2 2 3-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Winner</span></div>
+                <div class="preview-frame winning">
+                  <div class="p-browser"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div><div class="p-url">d-valera.com</div></div>
+                  <div class="pp-new"><div class="pp-nav"><span class="pp-nav-logo">D. VALERA</span><div class="pp-nav-links"><div class="pp-nav-link"></div><div class="pp-nav-link"></div><div class="pp-nav-link"></div></div></div><div class="pp-new-body"><div class="pp-new-thumbs-col"><div class="pp-new-thumb sel"></div><div class="pp-new-thumb"></div></div><div class="pp-new-image"><div class="pp-new-vase"></div></div><div class="pp-new-info"><div class="pp-new-info-title">Ceramic Flower Vase</div><div class="pp-new-info-price">270,00 грн</div><div class="pp-new-info-btn-red">Add to Cart</div><div class="pp-new-info-btn-blk">Buy Now</div></div></div></div>
+                </div>
+                <div style="margin-top:14px">
+                  <div class="stat-row"><span class="stat-name">Click on Add to Cart</span><span class="stat-val win-val">110</span></div>
+                  <div class="stat-row"><span class="stat-name">Success Rate <span style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border:1.5px solid #A8B3BD;border-radius:50%;font-size:7px;font-weight:800;color:#A8B3BD;vertical-align:middle;line-height:1">i</span></span><span class="stat-val win-val">12.3%</span></div>
+                  <div class="stat-row"><span class="stat-name">Bounce Rate <span style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border:1.5px solid #A8B3BD;border-radius:50%;font-size:7px;font-weight:800;color:#A8B3BD;vertical-align:middle;line-height:1">i</span></span><span class="stat-val win-val">57.8%</span></div>
+                  <div class="stat-row" style="border-bottom:none"><span class="stat-name">Visitors</span><span class="stat-val">896</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details sidebar — matches spec -->
+        <div class="card">
+          <div class="card-head">Details</div>
+          <div class="card-body">
+            <div class="detail-row"><div class="detail-lbl">Status</div><div class="detail-val"><span class="status-badge status-results-ready">Results Ready</span></div></div>
+            <div class="detail-row">
+              <div class="detail-lbl" style="display:flex;align-items:center;gap:4px">Goal <span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1.5px solid var(--t3);border-radius:50%;font-size:8px;font-weight:800;color:var(--t3);cursor:pointer">i</span></div>
+              <div class="detail-val">Click on Add to Cart button</div>
+            </div>
+            <div class="detail-row"><div class="detail-lbl">Test page</div><div class="detail-val">Home</div></div>
+            <div class="detail-row"><div class="detail-lbl">Test started</div><div class="detail-val">April 20, 2026 at 17:22</div></div>
+            <div class="detail-row" style="border-bottom:none"><div class="detail-lbl">Test Duration</div><div class="detail-val">13 days</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lb" onclick="closeLightbox(event)">
+  <div class="lb-inner" onclick="event.stopPropagation()">
+    <div class="lb-header">
+      <span class="lb-title-text" id="lb-title">Preview</span>
+      <button class="lb-close-btn" onclick="closeLightbox()"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="lb-body"><div id="lb-content"></div></div>
+  </div>
+</div>
+
+<script>
+function showToast(msg) {
+  const t = document.getElementById('winner-toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => { t.style.display = 'none'; }, 2800);
+}
+function showWinnerToast() { showToast('Winner version applied to your live site'); }
+
+/* ── Page 3-dot dropdown ── */
+function togglePageMenu(e) {
+  e.stopPropagation();
+  document.getElementById('page-dot-menu').classList.toggle('open');
+}
+function closePageMenu() { document.getElementById('page-dot-menu').classList.remove('open'); }
+document.addEventListener('click', () => closePageMenu());
+
+/* ── Preview hover overlays (injected) ── */
+function addOverlays() {
+  document.querySelectorAll('.preview-frame').forEach(frame => {
+    if (frame.querySelector('.preview-overlay')) return;
+    const ov = document.createElement('div');
+    ov.className = 'preview-overlay';
+    ov.innerHTML = `
+      <button class="pv-action" onclick="openLightbox(this)">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4.5 6.5h4M6.5 4.5v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Zoom in
+      </button>
+      <button class="pv-action" onclick="openLiveSite(event)">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M7 3H3.5A1.5 1.5 0 002 4.5v8A1.5 1.5 0 003.5 14h8a1.5 1.5 0 001.5-1.5V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9.5 2H14v4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2L8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Open in Editor
+      </button>`;
+    frame.appendChild(ov);
+  });
+}
+
+/* ── Lightbox ── */
+function openLightbox(btn) {
+  const frame = btn.closest('.preview-frame');
+  // derive label from sibling v-label
+  let title = 'Preview';
+  const wrap = frame.parentElement;
+  if (wrap) {
+    const lbl = wrap.querySelector('.v-label');
+    if (lbl) title = lbl.textContent.replace('Winner','').trim();
+  }
+
+  const scale = 2.6;
+  const w = frame.offsetWidth || 200;
+  const h = frame.offsetHeight || 140;
+
+  const clone = frame.cloneNode(true);
+  clone.querySelectorAll('.preview-overlay').forEach(el => el.remove());
+  clone.style.cssText = `width:${w}px;transform:scale(${scale});transform-origin:top left;position:absolute;top:0;left:0;pointer-events:none;border-radius:0;border:none`;
+
+  const outer = document.getElementById('lb-content');
+  outer.style.cssText = `width:${Math.round(w*scale)}px;height:${Math.round(h*scale)}px;position:relative;overflow:hidden;border-radius:6px;border:1px solid var(--border)`;
+  outer.innerHTML = '';
+  outer.appendChild(clone);
+
+  document.getElementById('lb-title').textContent = title;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(e) {
+  if (!e || e.target === e.currentTarget) {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+}
+function openLiveSite(e) {
+  if(e) e.stopPropagation();
+  showToast('Opening live site in new tab...');
+}
+
+/* ── Default to Option 7 + init overlays ── */
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('base-layout').style.display = 'none';
+  document.querySelectorAll('.exp-btn').forEach(el => { el.classList.toggle('active', el.textContent.includes('7')); });
+  document.querySelector('.winner-announce-bar').style.display = 'none';
+  const headerCta = document.querySelector('.primary-btn');
+  if(headerCta) headerCta.style.display = 'none';
+  addOverlays();
+});
+
+function setOpt(n, btn) {
+  document.querySelectorAll('.exp-btn').forEach(el => el.classList.remove('active'));
+  btn.classList.add('active');
+  const outerBanner = document.querySelector('.winner-announce-bar');
+  const headerCta = document.querySelector('.primary-btn');
+  const isO7 = (n === 7);
+  outerBanner.style.display = isO7 ? 'none' : '';
+  if(headerCta) headerCta.style.display = isO7 ? 'none' : '';
+  if (n <= 3) {
+    document.getElementById('base-layout').style.display = '';
+    document.querySelectorAll('.alt-layout').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.opt-stats').forEach(el => el.classList.remove('active'));
+    document.getElementById('stats-' + n).classList.add('active');
+  } else {
+    document.getElementById('base-layout').style.display = 'none';
+    document.querySelectorAll('.alt-layout').forEach(el => el.classList.remove('active'));
+    document.getElementById('layout-' + n).classList.add('active');
+  }
+  // inject overlays into any newly visible frames
+  setTimeout(addOverlays, 50);
+}
+</script>
+</body>
+</html>

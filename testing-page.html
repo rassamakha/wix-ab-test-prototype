@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WIX — Testing</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --blue:#116DFF;
+  --blue-h:#0D5EDB;
+  --blue-lt:#EDF3FF;
+  --bg:#F7F8FA;
+  --card:#fff;
+  --border:#E2E6ED;
+  --t1:#2D3540;
+  --t2:#677179;
+  --t3:#A8B3BD;
+  --green:#2A9057;
+  --green-lt:#EDFBF4;
+  --green-bd:rgba(42,144,87,0.2);
+  --amber:#A06800;
+  --amber-lt:#FFF8E6;
+  --shadow:0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.04);
+}
+
+body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--bg);color:var(--t1);font-size:13px;line-height:1.5}
+
+/* ─── WIX top nav ─── */
+.wix-nav{height:56px;background:white;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:8px;position:sticky;top:0;z-index:90}
+.wix-logo{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--t1);margin-right:6px}
+.wix-logo b{color:var(--blue)}
+.site-pill{display:flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--t1);cursor:pointer}
+.site-abbr{width:20px;height:20px;border-radius:4px;background:linear-gradient(135deg,#6B7AE8,#9B59B6);color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.nav-links{display:flex;gap:2px;margin-left:4px}
+.nav-link{padding:5px 10px;font-size:12px;color:var(--t2);border-radius:4px;cursor:pointer}
+.nav-link:hover{background:var(--bg)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-search{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:5px 13px;font-size:12px;color:var(--t3);width:240px;white-space:nowrap;overflow:hidden}
+.nav-search svg{width:13px;height:13px;flex-shrink:0}
+.upgrade-btn{background:var(--blue);color:white;border:none;border-radius:100px;padding:6px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.nav-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:var(--t2);cursor:pointer}
+.nav-icon:hover{background:var(--bg)}
+.nav-icon svg{width:16px;height:16px}
+.avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#6B7AE8,#9B59B6);display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:700;cursor:pointer}
+
+/* ─── Shell ─── */
+.wix-shell{display:flex;min-height:calc(100vh - 56px)}
+
+/* ─── Sidebar ─── */
+.wix-sb{width:252px;background:white;border-right:1px solid var(--border);flex-shrink:0}
+.sb-setup{padding:12px 16px 8px;font-size:12px;font-weight:700;color:var(--t1);display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.sb-setup svg{width:12px;height:12px;color:var(--t3)}
+.sb-progress{height:3px;background:var(--border);margin:0 16px}
+.sb-progress-fill{width:0;height:100%;background:var(--blue)}
+.sb-setup-sub{font-size:11px;color:var(--t2);padding:5px 16px 12px;border-bottom:1px solid var(--border)}
+.sb-item{display:flex;align-items:center;gap:10px;padding:8px 16px;font-size:13px;color:var(--t2);cursor:pointer}
+.sb-item:hover{background:var(--bg);color:var(--t1)}
+.sb-item.open{color:var(--t1);font-weight:600}
+.sb-item svg{width:15px;height:15px;flex-shrink:0;opacity:.6}
+.sb-item.open svg{opacity:1}
+.sb-item .chev{margin-left:auto;width:11px;height:11px;opacity:.4}
+.sb-sub{padding-bottom:4px}
+.sb-sub-item{padding:6px 16px 6px 42px;font-size:13px;color:var(--t2);cursor:pointer}
+.sb-sub-item:hover{background:var(--bg);color:var(--t1)}
+.sb-sub-item.active{color:var(--blue);font-weight:600;background:var(--blue-lt)}
+
+/* ─── Main ─── */
+.wix-main{flex:1;padding:32px 40px;min-width:0}
+
+/* ─── Breadcrumb ─── */
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t2);margin-bottom:14px}
+.breadcrumb a{color:var(--blue);text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+.bc-sep{color:var(--t3)}
+
+/* ─── Page header ─── */
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}
+.page-title{font-size:26px;font-weight:700;color:var(--t1);margin-bottom:5px;letter-spacing:-.01em}
+.page-subtitle{font-size:13px;color:var(--t2)}
+.btn-create{background:var(--blue);color:white;border:none;border-radius:100px;padding:11px 24px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;margin-left:24px;margin-top:4px}
+.btn-create:hover{background:var(--blue-h)}
+
+/* ─── Tab filter ─── */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px}
+.tab-item{padding:10px 16px;font-size:13px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500;white-space:nowrap;transition:color .15s}
+.tab-item.active{color:var(--t1);font-weight:700;border-bottom-color:var(--t1)}
+.tab-item:hover{color:var(--t1)}
+.tab-count{color:var(--t3);margin-left:2px;font-weight:400}
+.tab-item.active .tab-count{color:var(--t2)}
+
+/* ─── Test cards list ─── */
+.test-list{display:flex;flex-direction:column;gap:12px}
+
+/* ─── Individual test card ─── */
+.test-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:8px;
+  box-shadow:var(--shadow);
+  display:flex;
+  align-items:stretch;
+  overflow:hidden;
+  position:relative;
+  transition:box-shadow .15s;
+}
+.test-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+
+/* ─── vf-card: Final design matching spec ─── */
+.vf-card{
+  background:white;border:1px solid var(--border);
+  border-radius:8px;box-shadow:var(--shadow);
+  display:flex;align-items:stretch;overflow:hidden;
+  transition:box-shadow .15s;
+}
+.vf-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.09)}
+.vf-thumb{width:170px;flex-shrink:0;border-right:1px solid var(--border);overflow:hidden}
+.vf-body{flex:1;padding:16px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.vf-header{display:flex;align-items:center;gap:8px}
+.vf-name{font-size:15px;font-weight:700;color:var(--t1)}
+.vf-badge-ready{background:#EDF3FF;color:var(--blue);border:1px solid rgba(17,109,255,.2);font-size:11px;font-weight:600;padding:2px 9px;border-radius:5px;flex-shrink:0}
+.vf-badge-live{background:var(--green-lt);color:#2A7548;border:1px solid var(--green-bd);font-size:11px;font-weight:600;padding:2px 9px;border-radius:5px;display:inline-flex;align-items:center;gap:5px;flex-shrink:0}
+.vf-badge-live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green)}
+.vf-menu-wrap{margin-left:auto;position:relative;flex-shrink:0}
+.vf-menu{width:32px;height:32px;border:1px solid var(--border);border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;color:var(--t2);cursor:pointer}
+.vf-menu:hover{background:var(--bg)}
+.vf-menu svg{width:14px;height:14px}
+.vf-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:white;border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);min-width:186px;z-index:999;overflow:hidden;display:none}
+.vf-dropdown.open{display:block;animation:menuIn .14s cubic-bezier(.16,1,.3,1)}
+@keyframes menuIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.vfd-item{display:flex;align-items:center;gap:9px;padding:9px 14px;font-size:13px;color:var(--t1);cursor:pointer;transition:background .1s;white-space:nowrap}
+.vfd-item:hover{background:var(--bg)}
+.vfd-item svg{width:14px;height:14px;color:var(--t2);flex-shrink:0}
+.vfd-sep{height:1px;background:var(--border);margin:3px 0}
+.vfd-item.danger{color:#D93025}.vfd-item.danger svg{color:#D93025}
+.vf-verdict{background:var(--blue-lt);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.vf-verdict-text{font-size:13px;font-weight:600;color:var(--t1)}
+.vf-collecting{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0;min-height:38px}
+.vf-collecting-text{font-size:13px;color:var(--t2)}
+.vf-btn-ghost{background:white;color:var(--t1);border:1px solid var(--border);border-radius:100px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0}
+.vf-btn-ghost:hover{background:var(--bg);border-color:var(--t3)}
+.vf-footer{display:flex;align-items:center;font-size:12px;color:var(--t2);flex-wrap:wrap;gap:2px}
+.vf-footer-sep{margin:0 8px;color:var(--t3)}
+.vf-info{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1.5px solid var(--t3);border-radius:50%;font-size:8px;font-weight:800;color:var(--t3);margin-left:3px;cursor:default;flex-shrink:0;line-height:1}
+
+/* ─── Tooltip ─── */
+#tt-bubble{position:fixed;background:#1C1C1E;color:white;font-size:12px;line-height:1.5;padding:9px 12px;border-radius:8px;max-width:230px;z-index:99999;pointer-events:none;white-space:normal;box-shadow:0 4px 16px rgba(0,0,0,.28);opacity:0;transition:opacity .13s}
+#tt-bubble::after{content:'';position:absolute;top:100%;left:var(--tt-arrow-x,50%);transform:translateX(-50%);border:5px solid transparent;border-top-color:#1C1C1E}
+
+/* ─── New Version (vase) thumbnail ─── */
+.prev-vase{width:100%;height:100%;background:#FAF7F0;display:flex;flex-direction:column}
+.prev-vase-nav{display:flex;justify-content:space-between;align-items:center;padding:5px 8px;border-bottom:1px solid rgba(0,0,0,.06)}
+.prev-vase-logo{font-size:7px;font-weight:900;color:#1A1A1A;letter-spacing:.04em}
+.prev-vase-links{display:flex;gap:5px}
+.prev-vase-link{width:18px;height:2px;background:rgba(0,0,0,.12);border-radius:2px}
+.prev-vase-body{display:flex;flex:1;min-height:0}
+.prev-vase-col{width:16px;background:#F5F3EE;border-right:1px solid rgba(0,0,0,.06);padding:4px 2px;display:flex;flex-direction:column;gap:3px}
+.prev-vase-sq{width:12px;height:14px;background:#D5CFC6;border-radius:1px;border:1px solid rgba(0,0,0,.08)}
+.prev-vase-sq.sel{border-color:#5A5A5A}
+.prev-vase-img{flex:1;background:linear-gradient(160deg,#B8CAAA 0%,#8FA882 50%,#7A9870 100%);display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+.prev-vase-shape{width:22px;height:36px;background:linear-gradient(to bottom,#F0EDE6,#E0DBD3);border-radius:38% 38% 28% 28%/30% 30% 20% 20%;margin-bottom:4px;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+.prev-vase-info{width:38%;padding:6px 5px;background:#FAF7F0;border-left:1px solid rgba(0,0,0,.06);display:flex;flex-direction:column;gap:3px}
+.prev-vase-title{font-size:5.5px;font-weight:800;color:#1A1A1A;line-height:1.3}
+.prev-vase-price{font-size:6px;font-weight:700;color:#1A1A1A}
+.prev-vase-btn-red{width:100%;padding:2.5px 0;text-align:center;background:#E52A1A;color:white;font-size:4.5px;font-weight:800;border-radius:100px}
+.prev-vase-btn-blk{width:100%;padding:2.5px 0;text-align:center;background:#1A1A1A;color:white;font-size:4.5px;font-weight:800;border-radius:100px;margin-top:2px}
+
+/* ─── Preview thumbnail ─── */
+.tc-preview{
+  width:186px;
+  flex-shrink:0;
+  overflow:hidden;
+  border-right:1px solid var(--border);
+  position:relative;
+}
+
+/* Cat food site preview */
+.prev-catfood{
+  width:100%;
+  height:100%;
+  background:#F5F0E8;
+  display:flex;
+  flex-direction:column;
+}
+.prev-browser-bar{
+  background:#E8E8E8;
+  padding:4px 6px;
+  display:flex;
+  align-items:center;
+  gap:3px;
+  border-bottom:1px solid #DDD;
+  flex-shrink:0;
+}
+.prev-dot{width:6px;height:6px;border-radius:50%}
+.prev-dot:nth-child(1){background:#FF5F57}.prev-dot:nth-child(2){background:#FEBC2E}.prev-dot:nth-child(3){background:#28C840}
+.prev-url-bar{flex:1;margin-left:4px;background:white;border-radius:2px;height:12px}
+.prev-body{flex:1;padding:8px 10px 0;display:flex;flex-direction:column}
+.prev-nav-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.prev-logo{font-size:7px;font-weight:900;color:#2D2D2D;letter-spacing:.06em}
+.prev-nav-dots{display:flex;gap:5px}
+.prev-nav-seg{width:16px;height:2px;background:#00000012;border-radius:2px}
+.prev-hero{text-align:center;margin-bottom:6px}
+.prev-hero-title{font-size:8px;font-weight:800;color:#2D2D2D;line-height:1.35;margin-bottom:6px}
+.prev-cta-btn{display:inline-block;padding:2.5px 10px;font-size:6px;font-weight:800;color:white;border-radius:100px;letter-spacing:.04em}
+.prev-eyebrow{font-size:5.5px;color:#777;margin-bottom:3px;letter-spacing:.04em}
+.prev-img-area{flex:1;background:linear-gradient(160deg,#DFD6C4 0%,#C8BAA0 40%,#B8A888 100%);display:flex;align-items:flex-end;justify-content:center;overflow:hidden;border-radius:3px 3px 0 0;min-height:50px}
+.prev-cat{width:52px;height:44px;background:linear-gradient(to bottom,#C8B890,#B8A070);border-radius:48% 48% 0 0;position:relative;margin-bottom:-2px}
+.prev-cat::before,.prev-cat::after{content:'';position:absolute;top:-8px;width:10px;height:13px;background:#C8B890;border-radius:50% 50% 0 0}
+.prev-cat::before{left:6px;transform:rotate(-18deg)}.prev-cat::after{right:6px;transform:rotate(18deg)}
+
+/* Sweater product page preview */
+.prev-sweater{
+  width:100%;
+  height:100%;
+  background:#F9F8F6;
+  display:flex;
+  flex-direction:column;
+}
+.prev-sweater .prev-body{padding:10px 8px 0}
+.prev-sweater-layout{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1}
+.prev-sweater-info{padding-top:4px}
+.prev-sw-title{font-size:7px;font-weight:800;color:#1D1D1D;line-height:1.3;margin-bottom:4px}
+.prev-sw-price{font-size:8px;font-weight:700;color:#1D1D1D;margin-bottom:4px}
+.prev-sw-btn{width:100%;padding:3px 0;background:#4A7C59;color:white;font-size:5.5px;font-weight:800;border-radius:2px;text-align:center;letter-spacing:.04em}
+.prev-sw-dots{display:flex;gap:3px;margin-top:4px}
+.prev-sw-dot{width:12px;height:2px;background:#00000010;border-radius:2px}
+.prev-sweater-img{background:linear-gradient(135deg,#3A6B4A 0%,#4A7C59 40%,#5E9470 100%);border-radius:3px;display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:60px}
+.prev-sw-shape{width:40px;height:52px;background:rgba(255,255,255,0.12);border-radius:8px 8px 4px 4px;position:relative}
+.prev-sw-shape::before{content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:16px;height:10px;background:rgba(255,255,255,.15);border-radius:50%}
+/* neckline */
+.prev-sw-sleeve{position:absolute;top:8px;left:-10px;width:12px;height:28px;background:rgba(255,255,255,.1);border-radius:4px;transform:rotate(-5deg)}
+
+/* ─── Card content area ─── */
+.tc-content{
+  flex:1;
+  padding:16px 20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-width:0;
+}
+.tc-top{margin-bottom:auto}
+.tc-name-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.tc-name{font-size:15px;font-weight:700;color:var(--t1)}
+.tc-meta{font-size:12px;color:var(--t2)}
+
+/* ─── Status badges ─── */
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:500}
+.badge-winner{background:var(--amber-lt);color:var(--amber)}
+.badge-live{background:#EDFBF4;color:#2A7548;border:1px solid rgba(42,117,72,.15)}
+.badge-live::before{content:'';width:5px;height:5px;border-radius:50%;background:#2A9057;margin-right:5px}
+
+/* ─── Stats row ─── */
+.tc-stats{
+  display:flex;
+  align-items:center;
+  gap:0;
+  margin-top:14px;
+}
+.tc-stat-block{padding-right:20px}
+.tc-stat-block:not(:last-child){
+  padding-right:20px;
+  margin-right:20px;
+  border-right:1px solid var(--border);
+}
+.tc-stat-val{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-size:18px;
+  font-weight:700;
+  color:var(--t1);
+  line-height:1.1;
+  margin-bottom:2px;
+  font-variant-numeric:tabular-nums;
+}
+.tc-stat-val.metric-up{color:var(--green)}
+.tc-stat-val svg{width:16px;height:16px;flex-shrink:0}
+.tc-stat-label{font-size:11px;color:var(--t2)}
+.tc-collecting{font-size:13px;color:var(--t2);margin-top:14px;font-style:italic}
+
+/* ─── Action column ─── */
+.tc-action{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:space-between;
+  padding:12px 16px 16px;
+  flex-shrink:0;
+  gap:12px;
+}
+.menu-btn{
+  width:32px;height:32px;
+  border:1px solid var(--border);
+  border-radius:50%;
+  background:white;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--t2);
+  flex-shrink:0;
+}
+.menu-btn:hover{background:var(--bg)}
+.menu-btn svg{width:14px;height:14px}
+
+.btn-view-report{
+  background:var(--blue);color:white;border:none;
+  border-radius:100px;padding:9px 20px;
+  font-size:13px;font-weight:700;
+  cursor:pointer;font-family:inherit;
+  white-space:nowrap;
+}
+.btn-view-report:hover{background:var(--blue-h)}
+
+.btn-view-details{
+  background:transparent;color:var(--t1);
+  border:1px solid var(--border);
+  border-radius:100px;padding:9px 20px;
+  font-size:13px;font-weight:600;
+  cursor:pointer;font-family:inherit;
+  white-space:nowrap;
+}
+.btn-view-details:hover{background:var(--bg);border-color:var(--t3)}
+
+/* ─── Modal overlay ─── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.32);
+  align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:white;border-radius:12px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.18);
+  width:480px;max-width:calc(100vw - 32px);
+  padding:32px;position:relative;
+}
+.modal-title{font-size:18px;font-weight:700;color:var(--t1);margin-bottom:8px}
+.modal-desc{font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:24px}
+.modal-field label{display:block;font-size:12px;font-weight:600;color:var(--t1);margin-bottom:6px}
+.modal-select{
+  width:100%;padding:10px 14px;
+  border:1px solid var(--border);border-radius:8px;
+  font-size:13px;font-family:inherit;color:var(--t1);
+  background:white;cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23A8B3BD' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+  padding-right:36px;
+}
+.modal-select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(17,109,255,0.12)}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:28px}
+.modal-cancel{background:transparent;color:var(--t1);border:1px solid var(--border);border-radius:100px;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.modal-cancel:hover{background:var(--bg)}
+.modal-continue{background:var(--blue);color:white;border:none;border-radius:100px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.modal-continue:hover{background:var(--blue-h)}
+.modal-close{position:absolute;top:16px;right:16px;width:28px;height:28px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2)}
+.modal-close:hover{background:var(--border)}
+.modal-close svg{width:12px;height:12px}
+
+/* ════════════════════════════════════════════
+   EXPLORATION BAR (toggle between card layouts)
+═══════════════════════════════════════════════ */
+.exp-bar{height:46px;background:#1B2433;display:flex;align-items:center;padding:0 24px;gap:12px;flex-shrink:0;position:sticky;top:0;z-index:100}
+.exp-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);white-space:nowrap}
+.exp-pills{display:flex;align-items:center;gap:4px;flex:1}
+.exp-btn{padding:4px 13px;border-radius:100px;border:none;background:transparent;color:rgba(255,255,255,.4);font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.exp-btn:hover{color:rgba(255,255,255,.8)}
+.exp-btn.active{background:white;color:#1B2433;font-weight:700}
+.exp-hint{font-size:11px;color:rgba(255,255,255,.4);white-space:nowrap}
+
+/* Card variant containers — only active one shows */
+.variant-block{display:none}
+.variant-block.active{display:block}
+
+/* Common — shared mini thumb for variants */
+.mini-thumb{
+  width:200px;height:130px;border-radius:6px;
+  background:#F5F0E8;flex-shrink:0;overflow:hidden;position:relative;
+  display:flex;flex-direction:column;border:1px solid var(--border);
+}
+.mini-thumb-bar{height:14px;background:#EDE9E2;display:flex;align-items:center;padding:0 5px;gap:3px;border-bottom:1px solid rgba(0,0,0,.04)}
+.mini-thumb-bar .mt-dot{width:4px;height:4px;border-radius:50%;background:#D5CFC2}
+.mini-thumb-body{flex:1;padding:9px 10px 0;display:flex;flex-direction:column;align-items:center;text-align:center;background:#FAF7F0}
+.mini-thumb-logo{font-size:6.5px;font-weight:800;letter-spacing:.06em;color:#1A1A1A;margin-bottom:6px}
+.mini-thumb-title{font-size:11px;font-weight:800;color:#2D2D2D;line-height:1.2;margin-bottom:6px;font-family:'Plus Jakarta Sans',sans-serif}
+.mini-thumb-cta{display:inline-block;padding:3px 11px;font-size:7px;font-weight:800;color:white;border-radius:100px;letter-spacing:.04em}
+.mini-thumb.is-new{background:#FFF8F0}
+.mini-thumb.is-old{background:#FFFEF7}
+
+/* Winner ribbon */
+.winner-ribbon{
+  position:absolute;top:7px;right:7px;
+  background:var(--green);color:white;
+  font-size:8px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:2px 7px;border-radius:100px;
+  display:flex;align-items:center;gap:3px;
+}
+.winner-ribbon svg{width:8px;height:8px}
+
+/* ─────────────────────────────────────────
+   VARIANT 2 — User's spec ("Verdict Card")
+───────────────────────────────────────── */
+.v2-card{
+  background:white;border:1px solid var(--border);
+  border-radius:12px;padding:24px;
+  display:grid;grid-template-columns:auto 1fr auto;
+  gap:0 24px;align-items:start;
+  transition:box-shadow .15s;
+}
+.v2-card:hover{box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.v2-thumb{grid-row:span 3}
+.v2-title-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.v2-name{font-size:16px;font-weight:700;color:var(--t1)}
+.v2-menu{grid-column:3;grid-row:1;width:32px;height:32px;border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--t2);cursor:pointer;background:white}
+.v2-menu:hover{background:var(--bg)}
+.v2-menu svg{width:14px;height:14px}
+.v2-verdict-block{grid-column:2;padding:8px 0 18px}
+.v2-verdict{font-size:30px;font-weight:800;color:var(--t1);line-height:1.1;letter-spacing:-.02em;margin-bottom:8px;font-family:'Plus Jakarta Sans',sans-serif}
+.v2-growth{display:inline-flex;align-items:center;gap:6px;font-size:18px;font-weight:700;color:var(--green)}
+.v2-growth svg{width:18px;height:18px}
+.v2-bottom-row{grid-column:2;display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--border)}
+.v2-meta{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--t2)}
+.v2-meta .v2-sep{color:var(--t3)}
+.v2-action{grid-column:3;align-self:end;grid-row:3}
+
+/* ─────────────────────────────────────────
+   VARIANT 3 — Outcome / Money Framing
+───────────────────────────────────────── */
+.v3-card{
+  background:white;border:1px solid var(--border);
+  border-radius:14px;padding:26px 28px;
+  transition:box-shadow .15s;
+}
+.v3-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.05)}
+.v3-status-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.v3-status-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.v3-status-text{font-size:11px;font-weight:700;color:var(--green);letter-spacing:.08em;text-transform:uppercase}
+.v3-headline{font-size:26px;font-weight:700;color:var(--t1);letter-spacing:-.015em;line-height:1.15;margin-bottom:20px;max-width:520px;font-family:'Plus Jakarta Sans',sans-serif}
+.v3-headline strong{font-weight:800}
+.v3-body{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;margin-bottom:24px}
+.v3-thumbs-pair{display:flex;align-items:center;gap:10px}
+.v3-thumbs-pair .mini-thumb{width:140px;height:96px}
+.v3-thumbs-pair .mini-thumb-title{font-size:8px}
+.v3-thumbs-pair .mini-thumb-cta{font-size:5.5px;padding:2px 8px}
+.v3-outcomes{display:flex;flex-direction:column;gap:14px}
+.v3-outcome-row{display:flex;align-items:baseline;gap:12px}
+.v3-outcome-num{font-size:24px;font-weight:800;color:var(--t1);font-variant-numeric:tabular-nums;line-height:1;min-width:90px}
+.v3-outcome-num.up{color:var(--green)}
+.v3-outcome-label{font-size:13px;color:var(--t2);line-height:1.4}
+.v3-footer{display:flex;align-items:center;justify-content:space-between;padding-top:18px;border-top:1px solid var(--border)}
+.v3-footer-meta{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--t2)}
+.v3-footer-meta .dot-sep{width:3px;height:3px;border-radius:50%;background:var(--t3)}
+.v3-actions{display:flex;gap:10px}
+.v3-btn-secondary{background:white;color:var(--t1);border:1px solid var(--border);border-radius:100px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.v3-btn-secondary:hover{background:var(--bg)}
+.v3-btn-primary{background:var(--green);color:white;border:none;border-radius:100px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.v3-btn-primary:hover{background:#1e7040}
+
+/* ─────────────────────────────────────────
+   VARIANT 4 — Q&A Decision-Aid
+───────────────────────────────────────── */
+.v4-card{
+  background:white;border:1px solid var(--border);
+  border-radius:14px;padding:28px 32px;
+}
+.v4-question{font-size:14px;color:var(--t2);margin-bottom:8px;font-weight:500}
+.v4-answer{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:30px;font-weight:800;color:var(--t1);
+  letter-spacing:-.02em;margin-bottom:14px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+.v4-check{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.v4-check svg{width:16px;height:16px;color:white}
+.v4-reason{font-size:15px;color:var(--t1);line-height:1.55;margin-bottom:20px;max-width:540px}
+.v4-reason strong{font-weight:700}
+.v4-bars{background:var(--bg);border-radius:10px;padding:18px 20px;margin-bottom:22px}
+.v4-bar-row{display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center}
+.v4-bar-row + .v4-bar-row{margin-top:12px}
+.v4-bar-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.06em;text-transform:uppercase}
+.v4-bar-track{height:8px;background:rgba(0,0,0,.04);border-radius:100px;overflow:hidden;position:relative}
+.v4-bar-fill{height:100%;border-radius:100px;background:var(--t3)}
+.v4-bar-fill.win{background:var(--green)}
+.v4-bar-val{font-size:13px;font-weight:700;color:var(--t1);font-variant-numeric:tabular-nums;min-width:60px;text-align:right}
+.v4-bar-val.win{color:var(--green)}
+.v4-footer{display:flex;align-items:center;justify-content:space-between;padding-top:18px;border-top:1px solid var(--border)}
+.v4-meta{font-size:12px;color:var(--t2)}
+.v4-actions{display:flex;gap:10px}
+
+/* ─────────────────────────────────────────
+   VARIANT 5 — Story / Editorial
+───────────────────────────────────────── */
+.v5-card{
+  background:white;border:1px solid var(--border);
+  border-radius:14px;padding:32px 36px;
+  display:grid;grid-template-columns:1fr 200px;gap:32px;align-items:center;
+}
+.v5-tag{font-size:10px;font-weight:800;color:var(--blue);letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px}
+.v5-headline{
+  font-size:24px;font-weight:600;color:var(--t1);
+  line-height:1.35;letter-spacing:-.01em;margin-bottom:14px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+.v5-headline strong{font-weight:800;color:var(--green)}
+.v5-numbers{display:flex;gap:24px;margin-bottom:22px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.v5-num-item{display:flex;flex-direction:column;gap:2px}
+.v5-num-val{font-size:22px;font-weight:800;color:var(--t1);font-variant-numeric:tabular-nums;line-height:1}
+.v5-num-val.up{color:var(--green)}
+.v5-num-lbl{font-size:11px;color:var(--t2)}
+.v5-action-row{display:flex;align-items:center;justify-content:space-between}
+.v5-action-row-meta{font-size:12px;color:var(--t2)}
+.v5-btn{background:var(--t1);color:white;border:none;border-radius:100px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.v5-btn:hover{background:#000}
+.v5-btn svg{width:13px;height:13px}
+.v5-side-thumbs{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.v5-side-thumbs .mini-thumb{width:200px;height:130px;position:relative}
+.v5-vs-line{position:absolute;left:-12px;top:50%;font-size:10px;font-weight:800;color:var(--t3);letter-spacing:.08em;background:white;padding:2px 4px}
+
+/* ─────────────────────────────────────────
+   VARIANT 6 — Email Campaign Report Style
+   (WIX Email Marketing card pattern)
+───────────────────────────────────────── */
+.v6-card{
+  background:white;border:1px solid var(--border);
+  border-radius:8px;padding:18px 22px;
+  display:grid;grid-template-columns:140px 1fr auto;gap:24px;align-items:center;
+  transition:box-shadow .15s;
+}
+.v6-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.v6-thumb{
+  width:140px;height:96px;border-radius:6px;
+  background:#FAF7F0;overflow:hidden;display:flex;flex-direction:column;
+  border:1px solid var(--border);position:relative;
+}
+.v6-thumb-bar{height:12px;background:#EDE9E2;display:flex;align-items:center;padding:0 4px;gap:2px}
+.v6-thumb-bar .mt-dot{width:3.5px;height:3.5px;border-radius:50%;background:#D5CFC2}
+.v6-thumb-body{flex:1;padding:6px 6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FFF8F0}
+.v6-thumb-logo{font-size:5.5px;font-weight:800;color:#1A1A1A;letter-spacing:.06em;margin-bottom:3px}
+.v6-thumb-h{font-size:7px;font-weight:800;color:#1A1A1A;text-align:center;line-height:1.2;margin-bottom:3px}
+.v6-thumb-cta{font-size:5px;font-weight:800;color:white;padding:1.5px 6px;border-radius:100px;letter-spacing:.04em}
+.v6-thumb-ribbon{position:absolute;top:6px;right:6px;background:var(--green);color:white;font-size:7px;font-weight:800;padding:2px 6px;border-radius:100px;letter-spacing:.06em}
+.v6-info{display:flex;flex-direction:column;gap:12px;min-width:0}
+.v6-name-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.v6-name{font-size:15px;font-weight:700;color:var(--t1)}
+.v6-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;font-weight:700;padding:2px 9px;border-radius:100px;
+  background:#EDFBF4;color:var(--green);border:1px solid rgba(42,144,87,.18);
+}
+.v6-pill::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green)}
+.v6-stats-row{display:flex;gap:32px}
+.v6-stat{display:flex;flex-direction:column;gap:1px}
+.v6-stat-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.v6-stat-val{font-size:18px;font-weight:700;color:var(--t1);font-variant-numeric:tabular-nums;line-height:1.1}
+.v6-stat-val.win{color:var(--green)}
+.v6-stat-val.win svg{width:12px;height:12px;display:inline}
+.v6-stat-sub{font-size:11px;color:var(--t2);margin-top:1px}
+.v6-meta-row{font-size:11px;color:var(--t2)}
+.v6-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.v6-icon-btn{width:30px;height:30px;border:1px solid var(--border);border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;color:var(--t2);cursor:pointer}
+.v6-icon-btn:hover{background:var(--bg)}
+.v6-icon-btn svg{width:13px;height:13px}
+.v6-ghost-btn{background:white;color:var(--t1);border:1px solid var(--border);border-radius:100px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.v6-ghost-btn:hover{background:var(--bg)}
+
+/* ─────────────────────────────────────────
+   VARIANT 7 — Highlight Tile + Trend
+   (WIX Dashboard Highlights pattern)
+───────────────────────────────────────── */
+.v7-card{
+  background:white;border:1px solid var(--border);
+  border-radius:10px;padding:22px 24px;
+  display:grid;grid-template-columns:1fr 200px;gap:24px;align-items:stretch;
+}
+.v7-left{display:flex;flex-direction:column}
+.v7-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;color:var(--blue);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.v7-eyebrow svg{width:11px;height:11px}
+.v7-q{font-size:14px;color:var(--t1);font-weight:600;margin-bottom:14px}
+.v7-metric-row{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.v7-metric{font-size:42px;font-weight:800;color:var(--t1);letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums;font-family:'Plus Jakarta Sans',sans-serif}
+.v7-trend{display:inline-flex;align-items:center;gap:3px;color:var(--green);font-size:14px;font-weight:700}
+.v7-trend svg{width:13px;height:13px}
+.v7-vs{font-size:12px;color:var(--t2);margin-bottom:14px}
+.v7-spark{
+  height:34px;background:linear-gradient(to right,#EDFBF4 0%,#F4FEF8 100%);
+  border-radius:6px;position:relative;margin-bottom:14px;overflow:hidden;
+}
+.v7-spark svg{position:absolute;inset:0;width:100%;height:100%}
+.v7-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border)}
+.v7-foot-meta{font-size:11px;color:var(--t2)}
+.v7-link{font-size:12px;font-weight:700;color:var(--blue);text-decoration:none;display:inline-flex;align-items:center;gap:3px;cursor:pointer}
+.v7-link:hover{text-decoration:underline}
+.v7-link svg{width:11px;height:11px}
+.v7-right{display:flex;align-items:center;justify-content:center;background:#FFF8F0;border-radius:8px;padding:12px;position:relative}
+.v7-right .mini-thumb{width:170px;height:120px;border:1px solid rgba(0,0,0,.06)}
+.v7-right .winner-ribbon{top:18px;right:18px}
+
+/* ─────────────────────────────────────────
+   VARIANT 8 — Insight / Suggestion Card
+   (WIX Marketing recommendation pattern)
+───────────────────────────────────────── */
+.v8-card{
+  background:linear-gradient(135deg,#F4FEF8 0%,#EDFBF4 100%);
+  border:1px solid rgba(42,144,87,.2);
+  border-radius:12px;padding:24px 26px;
+  display:flex;align-items:center;gap:22px;
+  position:relative;
+}
+.v8-icon{
+  width:56px;height:56px;flex-shrink:0;border-radius:50%;
+  background:white;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 10px rgba(42,144,87,.18);
+}
+.v8-icon svg{width:28px;height:28px;color:var(--green)}
+.v8-body{flex:1;min-width:0}
+.v8-tag{display:inline-block;font-size:10px;font-weight:800;color:var(--green);background:white;border:1px solid rgba(42,144,87,.2);padding:2px 9px;border-radius:100px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.v8-title{font-size:18px;font-weight:700;color:var(--t1);line-height:1.3;letter-spacing:-.01em;margin-bottom:6px;font-family:'Plus Jakarta Sans',sans-serif}
+.v8-title strong{font-weight:800;color:var(--green)}
+.v8-sub{font-size:13px;color:var(--t2);line-height:1.55;max-width:540px}
+.v8-sub strong{color:var(--t1);font-weight:600}
+.v8-actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-shrink:0}
+.v8-primary{background:var(--green);color:white;border:none;border-radius:100px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.v8-primary:hover{background:#1e7040}
+.v8-link{background:none;border:none;color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:underline;padding:2px}
+.v8-link:hover{color:var(--t1)}
+.v8-dismiss{position:absolute;top:14px;right:14px;width:22px;height:22px;border:none;background:rgba(0,0,0,.04);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2)}
+.v8-dismiss:hover{background:rgba(0,0,0,.08)}
+.v8-dismiss svg{width:9px;height:9px}
+
+/* ─────────────────────────────────────────
+   VARIANTS 9-12 — v6 layout, label reworks
+───────────────────────────────────────── */
+.vL-card{
+  background:white;border:1px solid var(--border);
+  border-radius:8px;padding:18px 22px;
+  display:grid;grid-template-columns:140px 1fr auto;gap:24px;align-items:center;
+  transition:box-shadow .15s;
+}
+.vL-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.vL-thumb{
+  width:140px;height:96px;border-radius:6px;
+  background:#FFF8F0;overflow:hidden;display:flex;flex-direction:column;
+  border:1px solid var(--border);position:relative;
+}
+.vL-thumb-bar{height:12px;background:#EDE9E2;display:flex;align-items:center;padding:0 4px;gap:2px}
+.vL-thumb-bar .mt-dot{width:3.5px;height:3.5px;border-radius:50%;background:#D5CFC2}
+.vL-thumb-body{flex:1;padding:6px 6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.vL-thumb-logo{font-size:5.5px;font-weight:800;color:#1A1A1A;letter-spacing:.06em;margin-bottom:3px}
+.vL-thumb-h{font-size:7px;font-weight:800;color:#1A1A1A;text-align:center;line-height:1.2;margin-bottom:3px}
+.vL-thumb-cta{font-size:5px;font-weight:800;color:white;padding:1.5px 6px;border-radius:100px;letter-spacing:.04em}
+.vL-thumb-ribbon{position:absolute;top:6px;right:6px;background:var(--green);color:white;font-size:7px;font-weight:800;padding:2px 6px;border-radius:100px;letter-spacing:.06em}
+.vL-info{display:flex;flex-direction:column;gap:12px;min-width:0}
+.vL-name-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.vL-name{font-size:15px;font-weight:700;color:var(--t1)}
+.vL-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;font-weight:700;padding:2px 9px;border-radius:100px;
+  background:#EDFBF4;color:var(--green);border:1px solid rgba(42,144,87,.18);
+}
+.vL-pill::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green)}
+.vL-stats{display:flex;gap:36px}
+.vL-stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.vL-stat-lbl{font-size:11px;color:var(--t2);font-weight:600;line-height:1.3}
+.vL-stat-val{font-size:18px;font-weight:700;color:var(--t1);font-variant-numeric:tabular-nums;line-height:1.1}
+.vL-stat-val.win{color:var(--green);display:inline-flex;align-items:center;gap:3px}
+.vL-stat-val.win svg{width:12px;height:12px}
+.vL-stat-sub{font-size:11px;color:var(--t2)}
+.vL-meta-row{font-size:11px;color:var(--t2)}
+.vL-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.vL-icon-btn{width:30px;height:30px;border:1px solid var(--border);border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;color:var(--t2);cursor:pointer}
+.vL-icon-btn:hover{background:var(--bg)}
+.vL-icon-btn svg{width:13px;height:13px}
+</style>
+</head>
+<body>
+
+<!-- ── Exploration toggle bar ── -->
+<div class="exp-bar">
+  <span class="exp-label">Card Layouts</span>
+  <div class="exp-pills">
+    <button class="exp-btn active" onclick="setVariant(1,this)">1 · Current</button>
+    <button class="exp-btn" onclick="setVariant(2,this)">2 · Verdict</button>
+    <button class="exp-btn" onclick="setVariant(3,this)">3 · Outcome</button>
+    <button class="exp-btn" onclick="setVariant(4,this)">4 · Q&amp;A</button>
+    <button class="exp-btn" onclick="setVariant(5,this)">5 · Story</button>
+    <button class="exp-btn" onclick="setVariant(6,this)">6 · WIX Email</button>
+    <button class="exp-btn" onclick="setVariant(7,this)">7 · WIX Highlight</button>
+    <button class="exp-btn" onclick="setVariant(8,this)">8 · WIX Insight</button>
+    <button class="exp-btn" onclick="setVariant(9,this)">9 · Action labels</button>
+    <button class="exp-btn" onclick="setVariant(10,this)">10 · Fractions</button>
+    <button class="exp-btn" onclick="setVariant(11,this)">11 · Question labels</button>
+    <button class="exp-btn" onclick="setVariant(12,this)">12 · Time-relative</button>
+  </div>
+  <span class="exp-hint">Plain-language winner card</span>
+</div>
+
+<!-- ── WIX Top Nav ── -->
+<nav class="wix-nav">
+  <span class="wix-logo">WIX <b>STUDIO</b></span>
+  <div class="site-pill" onclick="window.location.href='wix-editor.html'" title="Open Editor"><div class="site-abbr">ST</div>Site Name<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 4l3 3 3-3" stroke="#A8B3BD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="nav-links"><span class="nav-link">Resources</span><span class="nav-link">Community</span><span class="nav-link">Help</span></div>
+  <div class="nav-right">
+    <div class="nav-search"><svg viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Search for tools, apps &amp; more...</div>
+    <button class="upgrade-btn">Upgrade</button>
+    <div class="nav-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M3 4h10M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="nav-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M2 12l4-4 3 3 5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="nav-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 8h4M8 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="avatar">ST</div>
+  </div>
+</nav>
+
+<!-- ── Shell ── -->
+<div class="wix-shell">
+
+  <!-- ── Sidebar ── -->
+  <aside class="wix-sb">
+    <div class="sb-setup">Let's set up your business<svg viewBox="0 0 10 10" fill="none"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="sb-progress"><div class="sb-progress-fill"></div></div>
+    <div class="sb-setup-sub">0/4 completed</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M6 8h4M8 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Setup</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1.5L2 6v8h4V9h4v5h4V6L8 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Home</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 4V3a3 3 0 016 0v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Getting Paid</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>All Payments</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Apps</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M1 6h14" stroke="currentColor" stroke-width="1.5"/><circle cx="4" cy="9" r="1" fill="currentColor"/></svg>Site &amp; Mobile App<svg class="chev" viewBox="0 0 10 10" fill="none"><path d="M3 4l2 2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><path d="M2 12l3-3 2 2 3-3 2 2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Inbox</div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><circle cx="5.5" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="10.5" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>Customers &amp; Leads<svg class="chev" viewBox="0 0 10 10" fill="none"><path d="M3 4l2 2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="sb-item"><svg viewBox="0 0 16 16" fill="none"><path d="M2 12l4-4 3 3 5-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Marketing<svg class="chev" viewBox="0 0 10 10" fill="none"><path d="M3 4l2 2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="sb-item open"><svg viewBox="0 0 16 16" fill="none"><path d="M2 14l3-5 2 3 3-4 3 3V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Analytics<svg class="chev" viewBox="0 0 10 10" fill="none"><path d="M3 6l2-2 2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="sb-sub">
+      <div class="sb-sub-item">Highlights</div><div class="sb-sub-item">Real-time</div>
+      <div class="sb-sub-item">Traffic</div><div class="sb-sub-item">Behavior</div>
+      <div class="sb-sub-item active" style="cursor:default">Experiments</div><div class="sb-sub-item">Marketing</div>
+      <div class="sb-sub-item">Session Recordings</div><div class="sb-sub-item">Insights</div>
+      <div class="sb-sub-item">Benchmarks</div>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <main class="wix-main">
+
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="page-title">Experiments</div>
+      </div>
+      <button class="btn-create" onclick="openModal()">Create new test</button>
+    </div>
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 1 — Final design (matches spec)
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block active" id="variant-1">
+
+    <!-- Tab filters -->
+    <div class="tabs">
+      <div class="tab-item active" onclick="filterTab(this,'all')">All Tests <span class="tab-count">(2)</span></div>
+      <div class="tab-item" onclick="filterTab(this,'live')">Running <span class="tab-count">(1)</span></div>
+      <div class="tab-item" onclick="filterTab(this,'ready')">Completed <span class="tab-count">(1)</span></div>
+      <div class="tab-item" onclick="filterTab(this,'draft')">Draft <span class="tab-count">(0)</span></div>
+    </div>
+
+    <div class="test-list">
+
+      <!-- ── Card 1: Running ── -->
+      <div class="vf-card" data-status="live">
+        <div class="vf-thumb">
+          <div class="prev-catfood" style="height:100%">
+            <div class="prev-browser-bar">
+              <div class="prev-dot"></div><div class="prev-dot"></div><div class="prev-dot"></div>
+              <div class="prev-url-bar"></div>
+            </div>
+            <div class="prev-body">
+              <div class="prev-nav-row">
+                <span class="prev-logo">D. VALERA</span>
+                <div class="prev-nav-dots"><div class="prev-nav-seg"></div><div class="prev-nav-seg"></div><div class="prev-nav-seg"></div><div class="prev-nav-seg"></div></div>
+              </div>
+              <div class="prev-hero">
+                <div class="prev-eyebrow">Premium Cat Food Store</div>
+                <div class="prev-hero-title">Unique Cat Food<br>Selection</div>
+                <div class="prev-cta-btn" style="background:#F5A623">Shop now</div>
+              </div>
+              <div class="prev-img-area"><div class="prev-cat"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="vf-body">
+          <div class="vf-header">
+            <span class="vf-name">Home page — shop now color</span>
+            <span class="vf-badge-live">Running</span>
+            <div class="vf-menu-wrap">
+              <button class="vf-menu" onclick="toggleVfMenu(this,event)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3.5" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="12.5" r="1.2" fill="currentColor"/></svg></button>
+              <div class="vf-dropdown">
+                <div class="vfd-item" onclick="vfdAction('Viewing details...',this)"><svg viewBox="0 0 16 16" fill="none"><path d="M2 8s2.5-5 6-5 6 5 6 5-2.5 5-6 5-6-5-6-5z" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>View details</div>
+                <div class="vfd-item" onclick="vfdAction('Test duplicated.',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Duplicate</div>
+                <div class="vfd-sep"></div>
+                <div class="vfd-item danger" onclick="vfdAction('Test stopped.',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="4" y="4" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>Stop test</div>
+                <div class="vfd-item danger" onclick="vfdAction('Test deleted.',this)"><svg viewBox="0 0 16 16" fill="none"><path d="M3 5h10M6 5V3h4v2M12 5l-.8 8H4.8L4 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Delete</div>
+              </div>
+            </div>
+          </div>
+          <div class="vf-collecting">
+            <span class="vf-collecting-text">Collecting Data</span>
+            <button class="vf-btn-ghost">View details</button>
+          </div>
+          <div class="vf-footer">
+            Goal: Visit Category Page<span class="vf-info" data-tooltip="The primary action you're measuring to determine a winner—such as a page visit or button click—chosen during setup.">i</span>
+            <span class="vf-footer-sep">|</span>
+            Calculating reliability<span class="vf-info" data-tooltip="How confident we are that one version is genuinely better—not just random chance. At 95%+, results are reliable enough to pick a winner.">i</span>
+            <span class="vf-footer-sep">|</span>
+            Test just started
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Card 2: Result Ready ── -->
+      <div class="vf-card" data-status="ready">
+        <div class="vf-thumb">
+          <div class="prev-vase">
+            <div class="prev-browser-bar">
+              <div class="prev-dot"></div><div class="prev-dot"></div><div class="prev-dot"></div>
+              <div class="prev-url-bar"></div>
+            </div>
+            <div class="prev-vase-nav"><span class="prev-vase-logo">D. VALERA</span><div class="prev-vase-links"><div class="prev-vase-link"></div><div class="prev-vase-link"></div><div class="prev-vase-link"></div></div></div>
+            <div class="prev-vase-body">
+              <div class="prev-vase-col"><div class="prev-vase-sq sel"></div><div class="prev-vase-sq"></div></div>
+              <div class="prev-vase-img"><div class="prev-vase-shape"></div></div>
+              <div class="prev-vase-info">
+                <div class="prev-vase-title">Ceramic Flower Vase</div>
+                <div class="prev-vase-price">$48.00</div>
+                <div class="prev-vase-btn-red">Add to Cart</div>
+                <div class="prev-vase-btn-blk">Buy Now</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="vf-body">
+          <div class="vf-header">
+            <span class="vf-name">Product page layout</span>
+            <span class="vf-badge-ready">Result Ready</span>
+            <div class="vf-menu-wrap">
+              <button class="vf-menu" onclick="toggleVfMenu(this,event)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3.5" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="12.5" r="1.2" fill="currentColor"/></svg></button>
+              <div class="vf-dropdown">
+                <div class="vfd-item" onclick="vfdAction('Opening results...',this);window.location.href='ab-test-layouts.html'"><svg viewBox="0 0 16 16" fill="none"><path d="M2 8s2.5-5 6-5 6 5 6 5-2.5 5-6 5-6-5-6-5z" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>View results</div>
+                <div class="vfd-item" onclick="vfdAction('Winner version applied to your site.',this)"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.5 3.5 6.5-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Apply New Version</div>
+                <div class="vfd-item" onclick="vfdAction('Test duplicated.',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Duplicate</div>
+                <div class="vfd-sep"></div>
+                <div class="vfd-item danger" onclick="vfdAction('Test deleted.',this)"><svg viewBox="0 0 16 16" fill="none"><path d="M3 5h10M6 5V3h4v2M12 5l-.8 8H4.8L4 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Delete</div>
+              </div>
+            </div>
+          </div>
+          <div class="vf-verdict">
+            <span class="vf-verdict-text">New Version wins. Click on Add to Cart: 8.1% → 12.3%</span>
+            <a href="ab-test-layouts.html" style="text-decoration:none"><button class="vf-btn-ghost">View Results</button></a>
+          </div>
+          <div class="vf-footer">
+            Goal: Click on Add to Cart button<span class="vf-info" data-tooltip="The primary action you're measuring to determine a winner—such as a page visit or button click—chosen during setup.">i</span>
+            <span class="vf-footer-sep">|</span>
+            Result Reliability: High<span class="vf-info" data-tooltip="How confident we are that one version is genuinely better—not just random chance. At 95%+, results are reliable enough to pick a winner.">i</span>
+            <span class="vf-footer-sep">|</span>
+            Running for 13 days
+          </div>
+        </div>
+      </div>
+
+    </div>
+    </div><!-- end variant-1 -->
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 2 — User's spec ("Verdict Card")
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block" id="variant-2">
+      <div class="v2-card">
+        <div class="v2-thumb">
+          <div class="mini-thumb is-new">
+            <div class="mini-thumb-bar"><div class="mt-dot"></div><div class="mt-dot"></div><div class="mt-dot"></div></div>
+            <div class="mini-thumb-body">
+              <div class="mini-thumb-logo">D. VALERA</div>
+              <div class="mini-thumb-title">Unique Cat Food<br>Selection</div>
+              <div class="mini-thumb-cta" style="background:#E52A1A">Shop now</div>
+            </div>
+            <div class="winner-ribbon"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4.5l2 2 3-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>New</div>
+          </div>
+        </div>
+        <div class="v2-title-row">
+          <span class="v2-name">Home: Shop now button color</span>
+        </div>
+        <div class="v2-menu"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="13" r="1.2" fill="currentColor"/></svg></div>
+        <div class="v2-verdict-block">
+          <div class="v2-verdict">New Version is winning</div>
+          <div class="v2-growth">
+            <svg viewBox="0 0 18 18" fill="none"><path d="M9 14V4M4 9l5-5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            54% Growth
+          </div>
+        </div>
+        <div class="v2-bottom-row">
+          <div class="v2-meta">
+            <span>Click on Shop now button</span><span class="v2-sep">·</span><span>Live for 8 days</span>
+          </div>
+        </div>
+        <div class="v2-action"><a href="ab-test-layouts.html" style="text-decoration:none"><button class="btn-view-report">View report</button></a></div>
+      </div>
+    </div><!-- end variant-2 -->
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 3 — Outcome / Money Framing
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block" id="variant-3">
+      <div class="v3-card">
+        <div class="v3-status-row">
+          <div class="v3-status-dot"></div>
+          <span class="v3-status-text">Winner found</span>
+        </div>
+        <div class="v3-headline">Your <strong>new red Shop now button</strong> is getting more people to click.</div>
+        <div class="v3-body">
+          <div class="v3-thumbs-pair">
+            <div class="mini-thumb is-old">
+              <div class="mini-thumb-bar"><div class="mt-dot"></div><div class="mt-dot"></div><div class="mt-dot"></div></div>
+              <div class="mini-thumb-body">
+                <div class="mini-thumb-logo">D. VALERA</div>
+                <div class="mini-thumb-title" style="font-size:7px">Unique Cat Food<br>Selection</div>
+                <div class="mini-thumb-cta" style="background:#F5A623">Shop now</div>
+              </div>
+            </div>
+            <div class="mini-thumb is-new">
+              <div class="mini-thumb-bar"><div class="mt-dot"></div><div class="mt-dot"></div><div class="mt-dot"></div></div>
+              <div class="mini-thumb-body">
+                <div class="mini-thumb-logo">D. VALERA</div>
+                <div class="mini-thumb-title" style="font-size:7px">Unique Cat Food<br>Selection</div>
+                <div class="mini-thumb-cta" style="background:#E52A1A">Shop now</div>
+              </div>
+              <div class="winner-ribbon"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4.5l2 2 3-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Winner</div>
+            </div>
+          </div>
+          <div class="v3-outcomes">
+            <div class="v3-outcome-row">
+              <span class="v3-outcome-num up">+199</span>
+              <span class="v3-outcome-label">more clicks on <strong>Shop now</strong><br>over the last 8 days</span>
+            </div>
+            <div class="v3-outcome-row">
+              <span class="v3-outcome-num up">+54%</span>
+              <span class="v3-outcome-label">improvement vs. your<br>original yellow button</span>
+            </div>
+          </div>
+        </div>
+        <div class="v3-footer">
+          <div class="v3-footer-meta">
+            <span>Home page</span><span class="dot-sep"></span>
+            <span>8 days</span><span class="dot-sep"></span>
+            <span>8,659 visitors</span>
+          </div>
+          <div class="v3-actions">
+            <button class="v3-btn-secondary">View full report</button>
+            <button class="v3-btn-primary">Apply new version</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- end variant-3 -->
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 4 — Q&A Decision-Aid
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block" id="variant-4">
+      <div class="v4-card">
+        <div class="v4-question">Home page — Shop now button color</div>
+        <div class="v4-answer">
+          <div class="v4-check"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          Yes — switch to the new version
+        </div>
+        <div class="v4-reason">
+          More visitors are clicking your new red <strong>Shop now</strong> button.<br>
+          About <strong>12 out of every 100 visitors</strong> click it now, compared to <strong>8 out of 100</strong> with the original yellow.
+        </div>
+        <div class="v4-bars">
+          <div class="v4-bar-row">
+            <span class="v4-bar-label">Original</span>
+            <div class="v4-bar-track"><div class="v4-bar-fill" style="width:65%"></div></div>
+            <span class="v4-bar-val">8 / 100</span>
+          </div>
+          <div class="v4-bar-row">
+            <span class="v4-bar-label" style="color:var(--green)">New</span>
+            <div class="v4-bar-track"><div class="v4-bar-fill win" style="width:100%"></div></div>
+            <span class="v4-bar-val win">12 / 100</span>
+          </div>
+        </div>
+        <div class="v4-footer">
+          <div class="v4-meta">Tested for 8 days · 8,659 visitors · Strong signal</div>
+          <div class="v4-actions">
+            <button class="v3-btn-secondary">See full details</button>
+            <button class="v3-btn-primary">Switch to new version</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- end variant-4 -->
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 5 — Story / Editorial
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block" id="variant-5">
+      <div class="v5-card">
+        <div>
+          <div class="v5-tag">★ HOME PAGE TEST</div>
+          <div class="v5-headline">After 8 days and 8,659 visitors, your <strong>new red Shop now button</strong> beat the original yellow one.</div>
+          <div class="v5-numbers">
+            <div class="v5-num-item">
+              <span class="v5-num-val up">+54%</span>
+              <span class="v5-num-lbl">More clicks</span>
+            </div>
+            <div class="v5-num-item">
+              <span class="v5-num-val">+199</span>
+              <span class="v5-num-lbl">Extra clicks total</span>
+            </div>
+            <div class="v5-num-item">
+              <span class="v5-num-val">~25</span>
+              <span class="v5-num-lbl">More clicks / week</span>
+            </div>
+          </div>
+          <div class="v5-action-row">
+            <span class="v5-action-row-meta">Goal: clicks on <strong>Shop now</strong> button</span>
+            <a href="ab-test-layouts.html" style="text-decoration:none"><button class="v5-btn">Review and apply <svg viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7 2.5l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></a>
+          </div>
+        </div>
+        <div class="v5-side-thumbs">
+          <div class="mini-thumb is-old">
+            <div class="mini-thumb-bar"><div class="mt-dot"></div><div class="mt-dot"></div><div class="mt-dot"></div></div>
+            <div class="mini-thumb-body">
+              <div class="mini-thumb-logo">D. VALERA · OLD</div>
+              <div class="mini-thumb-title">Unique Cat Food<br>Selection</div>
+              <div class="mini-thumb-cta" style="background:#F5A623">Shop now</div>
+            </div>
+          </div>
+          <div class="mini-thumb is-new">
+            <div class="mini-thumb-bar"><div class="mt-dot"></div><div class="mt-dot"></div><div class="mt-dot"></div></div>
+            <div class="mini-thumb-body">
+              <div class="mini-thumb-logo">D. VALERA · NEW</div>
+              <div class="mini-thumb-title">Unique Cat Food<br>Selection</div>
+              <div class="mini-thumb-cta" style="background:#E52A1A">Shop now</div>
+            </div>
+            <div class="winner-ribbon"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4.5l2 2 3-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Winner</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- end variant-5 -->
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 6 — WIX Email Campaign Style
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block" id="variant-6">
+      <div class="v6-card">
+        <div class="v6-thumb">
+          <div class="v6-thumb-bar"><div class="mt-dot"></div><div class="mt-dot"></div><div class="mt-dot"></div></div>
+          <div class="v6-thumb-body">
+            <div class="v6-thumb-logo">D. VALERA</div>
+            <div class="v6-thumb-h">Unique Cat Food<br>Selection</div>
+            <div class="v6-thumb-cta" style="background:#E52A1A">Shop now</div>
+          </div>
+          <div class="v6-thumb-ribbon">NEW</div>
+        </div>
+        <div class="v6-info">
+          <div class="v6-name-row">
+            <span class="v6-name">Home: Shop now button color</span>
+            <span class="v6-pill">Winner found</span>
+          </div>
+          <div class="v6-stats-row">
+            <div class="v6-stat">
+              <span class="v6-stat-lbl">Conversion</span>
+              <span class="v6-stat-val win">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M6 9V3M3 6l3-3 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                +54%
+              </span>
+              <span class="v6-stat-sub">vs original</span>
+            </div>
+            <div class="v6-stat">
+              <span class="v6-stat-lbl">Clicks</span>
+              <span class="v6-stat-val">541</span>
+              <span class="v6-stat-sub">+199 vs 342</span>
+            </div>
+            <div class="v6-stat">
+              <span class="v6-stat-lbl">Visitors</span>
+              <span class="v6-stat-val">8,659</span>
+              <span class="v6-stat-sub">8 days</span>
+            </div>
+          </div>
+          <div class="v6-meta-row">Goal: Click on <strong>Shop now</strong> button · Strong signal · Started May 5</div>
+        </div>
+        <div class="v6-actions">
+          <div class="v6-icon-btn"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="13" r="1.2" fill="currentColor"/></svg></div>
+          <a href="ab-test-layouts.html" style="text-decoration:none"><button class="btn-view-report">View report</button></a>
+        </div>
+      </div>
+    </div><!-- end variant-6 -->
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 7 — WIX Dashboard Highlight Tile
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block" id="variant-7">
+      <div class="v7-card">
+        <div class="v7-left">
+          <span class="v7-eyebrow">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 9l3-3 2 2 3-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            A/B Test · Home page
+          </span>
+          <div class="v7-q">How is your new Shop now button performing?</div>
+          <div class="v7-metric-row">
+            <span class="v7-metric">+54%</span>
+            <span class="v7-trend">
+              <svg viewBox="0 0 14 14" fill="none"><path d="M7 11V3M3.5 6.5L7 3l3.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Strong signal
+            </span>
+          </div>
+          <div class="v7-vs">More clicks vs. the original yellow button</div>
+          <div class="v7-spark">
+            <svg viewBox="0 0 200 34" preserveAspectRatio="none">
+              <path d="M0 26 L20 24 L40 22 L60 23 L80 19 L100 17 L120 14 L140 12 L160 10 L180 8 L200 5" stroke="#2A9057" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M0 26 L20 24 L40 22 L60 23 L80 19 L100 17 L120 14 L140 12 L160 10 L180 8 L200 5 L200 34 L0 34 Z" fill="rgba(42,144,87,.12)"/>
+            </svg>
+          </div>
+          <div class="v7-foot">
+            <span class="v7-foot-meta">Test ran for 8 days · 8,659 visitors</span>
+            <a class="v7-link" href="ab-test-layouts.html">View report
+              <svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="v7-right">
+          <div class="mini-thumb is-new">
+            <div class="mini-thumb-bar"><div class="mt-dot"></div><div class="mt-dot"></div><div class="mt-dot"></div></div>
+            <div class="mini-thumb-body">
+              <div class="mini-thumb-logo">D. VALERA</div>
+              <div class="mini-thumb-title" style="font-size:9px">Unique Cat Food<br>Selection</div>
+              <div class="mini-thumb-cta" style="background:#E52A1A;font-size:6px">Shop now</div>
+            </div>
+          </div>
+          <div class="winner-ribbon"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4.5l2 2 3-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Winner</div>
+        </div>
+      </div>
+    </div><!-- end variant-7 -->
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 8 — WIX Insight / Suggestion Card
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block" id="variant-8">
+      <div class="v8-card">
+        <button class="v8-dismiss"><svg viewBox="0 0 9 9" fill="none"><path d="M1 1l7 7M8 1L1 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <div class="v8-icon">
+          <svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="12" fill="currentColor" opacity=".12"/><path d="M9 14.5l3.5 3.5L20 10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="v8-body">
+          <span class="v8-tag">A/B Test Result</span>
+          <div class="v8-title">Your new <strong>red Shop now button</strong> is winning by 54%.</div>
+          <div class="v8-sub">After 8 days and <strong>8,659 visitors</strong>, the new version got 199 more clicks than the original yellow button. Time to make it permanent.</div>
+        </div>
+        <div class="v8-actions">
+          <button class="v8-primary">Apply new version</button>
+          <a href="ab-test-layouts.html" style="text-decoration:none"><button class="v8-link">See full details</button></a>
+        </div>
+      </div>
+    </div><!-- end variant-8 -->
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 9 — Action-Focused Labels
+         Replace jargon with what people DID
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block" id="variant-9">
+      <div class="vL-card">
+        <div class="vL-thumb">
+          <div class="vL-thumb-bar"><div class="mt-dot"></div><div class="mt-dot"></div><div class="mt-dot"></div></div>
+          <div class="vL-thumb-body">
+            <div class="vL-thumb-logo">D. VALERA</div>
+            <div class="vL-thumb-h">Unique Cat Food<br>Selection</div>
+            <div class="vL-thumb-cta" style="background:#E52A1A">Shop now</div>
+          </div>
+          <div class="vL-thumb-ribbon">NEW</div>
+        </div>
+        <div class="vL-info">
+          <div class="vL-name-row">
+            <span class="vL-name">Home: Shop now button color</span>
+            <span class="vL-pill">New version wins</span>
+          </div>
+          <div class="vL-stats">
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">More people clicked</span>
+              <span class="vL-stat-val win">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M6 9V3M3 6l3-3 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                54% more
+              </span>
+            </div>
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">Extra clicks on Shop now</span>
+              <span class="vL-stat-val">+199</span>
+            </div>
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">People who saw it</span>
+              <span class="vL-stat-val">8,659</span>
+            </div>
+          </div>
+          <div class="vL-meta-row">Tested for 8 days on the Home page · Strong winner</div>
+        </div>
+        <div class="vL-actions">
+          <div class="vL-icon-btn"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="13" r="1.2" fill="currentColor"/></svg></div>
+          <a href="ab-test-layouts.html" style="text-decoration:none"><button class="btn-view-report">View report</button></a>
+        </div>
+      </div>
+    </div><!-- end variant-9 -->
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 10 — Fractions (out of 100)
+         People grasp fractions better than %
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block" id="variant-10">
+      <div class="vL-card">
+        <div class="vL-thumb">
+          <div class="vL-thumb-bar"><div class="mt-dot"></div><div class="mt-dot"></div><div class="mt-dot"></div></div>
+          <div class="vL-thumb-body">
+            <div class="vL-thumb-logo">D. VALERA</div>
+            <div class="vL-thumb-h">Unique Cat Food<br>Selection</div>
+            <div class="vL-thumb-cta" style="background:#E52A1A">Shop now</div>
+          </div>
+          <div class="vL-thumb-ribbon">NEW</div>
+        </div>
+        <div class="vL-info">
+          <div class="vL-name-row">
+            <span class="vL-name">Home: Shop now button color</span>
+            <span class="vL-pill">New version wins</span>
+          </div>
+          <div class="vL-stats">
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">Click on Shop now (new)</span>
+              <span class="vL-stat-val win">12 out of 100</span>
+              <span class="vL-stat-sub">visitors clicked it</span>
+            </div>
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">Click on Shop now (original)</span>
+              <span class="vL-stat-val">8 out of 100</span>
+              <span class="vL-stat-sub">visitors clicked it</span>
+            </div>
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">Tested with</span>
+              <span class="vL-stat-val">8,659 people</span>
+              <span class="vL-stat-sub">over 8 days</span>
+            </div>
+          </div>
+          <div class="vL-meta-row">That's 4 more clicks for every 100 visitors. Strong winner.</div>
+        </div>
+        <div class="vL-actions">
+          <div class="vL-icon-btn"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="13" r="1.2" fill="currentColor"/></svg></div>
+          <a href="ab-test-layouts.html" style="text-decoration:none"><button class="btn-view-report">View report</button></a>
+        </div>
+      </div>
+    </div><!-- end variant-10 -->
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 11 — Question Labels
+         Labels are the user's questions
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block" id="variant-11">
+      <div class="vL-card">
+        <div class="vL-thumb">
+          <div class="vL-thumb-bar"><div class="mt-dot"></div><div class="mt-dot"></div><div class="mt-dot"></div></div>
+          <div class="vL-thumb-body">
+            <div class="vL-thumb-logo">D. VALERA</div>
+            <div class="vL-thumb-h">Unique Cat Food<br>Selection</div>
+            <div class="vL-thumb-cta" style="background:#E52A1A">Shop now</div>
+          </div>
+          <div class="vL-thumb-ribbon">NEW</div>
+        </div>
+        <div class="vL-info">
+          <div class="vL-name-row">
+            <span class="vL-name">Home: Shop now button color</span>
+            <span class="vL-pill">New version wins</span>
+          </div>
+          <div class="vL-stats">
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">Is the new one better?</span>
+              <span class="vL-stat-val win">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5l2.5 2.5L9.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Yes, 54% better
+              </span>
+            </div>
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">How many extra clicks?</span>
+              <span class="vL-stat-val">+199 clicks</span>
+            </div>
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">Is the result reliable?</span>
+              <span class="vL-stat-val">Strong signal</span>
+              <span class="vL-stat-sub">8,659 visitors, 8 days</span>
+            </div>
+          </div>
+          <div class="vL-meta-row">Goal: people clicking the <strong>Shop now</strong> button on your Home page</div>
+        </div>
+        <div class="vL-actions">
+          <div class="vL-icon-btn"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="13" r="1.2" fill="currentColor"/></svg></div>
+          <a href="ab-test-layouts.html" style="text-decoration:none"><button class="btn-view-report">View report</button></a>
+        </div>
+      </div>
+    </div><!-- end variant-11 -->
+
+    <!-- ═════════════════════════════════════════════
+         VARIANT 12 — Time-relative
+         "Per week" feels real, not abstract totals
+    ═════════════════════════════════════════════ -->
+    <div class="variant-block" id="variant-12">
+      <div class="vL-card">
+        <div class="vL-thumb">
+          <div class="vL-thumb-bar"><div class="mt-dot"></div><div class="mt-dot"></div><div class="mt-dot"></div></div>
+          <div class="vL-thumb-body">
+            <div class="vL-thumb-logo">D. VALERA</div>
+            <div class="vL-thumb-h">Unique Cat Food<br>Selection</div>
+            <div class="vL-thumb-cta" style="background:#E52A1A">Shop now</div>
+          </div>
+          <div class="vL-thumb-ribbon">NEW</div>
+        </div>
+        <div class="vL-info">
+          <div class="vL-name-row">
+            <span class="vL-name">Home: Shop now button color</span>
+            <span class="vL-pill">New version wins</span>
+          </div>
+          <div class="vL-stats">
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">Each week, you'll get</span>
+              <span class="vL-stat-val win">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M6 9V3M3 6l3-3 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                ~25 more
+              </span>
+              <span class="vL-stat-sub">people clicking Shop now</span>
+            </div>
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">Over the past 8 days</span>
+              <span class="vL-stat-val">+199 clicks</span>
+              <span class="vL-stat-sub">than the original</span>
+            </div>
+            <div class="vL-stat">
+              <span class="vL-stat-lbl">Test confidence</span>
+              <span class="vL-stat-val">Strong</span>
+              <span class="vL-stat-sub">8,659 people tested</span>
+            </div>
+          </div>
+          <div class="vL-meta-row">Started May 5 · Home page · Goal: Shop now button clicks</div>
+        </div>
+        <div class="vL-actions">
+          <div class="vL-icon-btn"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="13" r="1.2" fill="currentColor"/></svg></div>
+          <a href="ab-test-layouts.html" style="text-decoration:none"><button class="btn-view-report">View report</button></a>
+        </div>
+      </div>
+    </div><!-- end variant-12 -->
+
+  </main>
+</div>
+
+<!-- ── Create new test modal ── -->
+<div class="modal-overlay" id="create-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()"><svg viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    <div class="modal-title">Create A/B test</div>
+    <div class="modal-desc">Select a page to test. We'll create an exact copy you can edit, then run both versions with your visitors to find the winner.</div>
+    <div class="modal-field">
+      <label>Page to test</label>
+      <select class="modal-select">
+        <option value="" disabled selected>Select a page...</option>
+        <option>Home</option>
+        <option>Category page</option>
+        <option>Product page — Grain-free salmon</option>
+        <option>Product page — Organic chicken</option>
+        <option>About us</option>
+        <option>Contact</option>
+        <option>Shop All</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-continue" onclick="window.location.href='wix-editor.html'">Continue in Editor</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openModal(){document.getElementById('create-modal').classList.add('open')}
+function closeModal(){document.getElementById('create-modal').classList.remove('open')}
+function setVariant(n, btn){
+  document.querySelectorAll('.exp-btn').forEach(el => el.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.variant-block').forEach(el => el.classList.remove('active'));
+  document.getElementById('variant-' + n).classList.add('active');
+}
+function filterTab(el, status){
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const cards = document.querySelectorAll('.vf-card');
+  cards.forEach(c => {
+    if(status === 'all') c.style.display = '';
+    else c.style.display = (c.dataset.status === status) ? '' : 'none';
+  });
+}
+
+/* ── Card 3-dot dropdowns (portal — renders outside clipped card) ── */
+let _vfPortal = null;
+let _vfPortalBtn = null;
+
+function toggleVfMenu(btn, e) {
+  e.stopPropagation();
+  if (_vfPortal) {
+    _vfPortal.remove(); _vfPortal = null;
+    if (_vfPortalBtn === btn) { _vfPortalBtn = null; return; }
+  }
+  _vfPortalBtn = btn;
+  const wrap = btn.parentElement;
+  const dd = wrap.querySelector('.vf-dropdown');
+  const rect = btn.getBoundingClientRect();
+  const portal = dd.cloneNode(true);
+  portal.className = 'vf-dropdown open';
+  portal.style.cssText = `position:fixed;top:${rect.bottom + 6}px;right:${window.innerWidth - rect.right}px;display:block;z-index:9999`;
+  document.body.appendChild(portal);
+  _vfPortal = portal;
+  setTimeout(() => {
+    document.addEventListener('click', function _close() {
+      if (_vfPortal) { _vfPortal.remove(); _vfPortal = null; _vfPortalBtn = null; }
+      document.removeEventListener('click', _close);
+    });
+  }, 0);
+}
+function vfdAction(msg, el) {
+  if (_vfPortal) { _vfPortal.remove(); _vfPortal = null; _vfPortalBtn = null; }
+  showVfToast(msg);
+}
+function showVfToast(msg) {
+  let t = document.getElementById('vf-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'vf-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:white;padding:11px 22px;border-radius:100px;font-size:13px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.3);white-space:nowrap;z-index:9999;animation:vfToastIn .25s cubic-bezier(.16,1,.3,1)';
+    document.head.insertAdjacentHTML('beforeend','<style>@keyframes vfToastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}</style>');
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => { t.style.display = 'none'; }, 2500);
+}
+
+/* ── Tooltip ── */
+(function() {
+  const tt = document.createElement('div');
+  tt.id = 'tt-bubble';
+  document.body.appendChild(tt);
+
+  document.addEventListener('mouseover', e => {
+    const el = e.target.closest('[data-tooltip]');
+    if (!el) return;
+    tt.textContent = el.dataset.tooltip;
+    tt.style.opacity = '0';
+    tt.style.display = 'block';
+    const r = el.getBoundingClientRect();
+    const ttW = tt.offsetWidth;
+    const ttH = tt.offsetHeight;
+    let left = r.left + r.width / 2 - ttW / 2;
+    // clamp to viewport
+    left = Math.max(8, Math.min(left, window.innerWidth - ttW - 8));
+    const arrowX = (r.left + r.width / 2 - left);
+    tt.style.setProperty('--tt-arrow-x', arrowX + 'px');
+    tt.style.left = left + 'px';
+    tt.style.top = (r.top - ttH - 10) + 'px';
+    tt.style.opacity = '1';
+  });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest('[data-tooltip]')) tt.style.opacity = '0';
+  });
+})();
+</script>
+</body>
+</html>
