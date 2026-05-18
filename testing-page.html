@@ -56,14 +56,14 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
 .sb-progress{height:3px;background:var(--border);margin:0 16px}
 .sb-progress-fill{width:0;height:100%;background:var(--blue)}
 .sb-setup-sub{font-size:11px;color:var(--t2);padding:5px 16px 12px;border-bottom:1px solid var(--border)}
-.sb-item{display:flex;align-items:center;gap:10px;padding:8px 16px;font-size:13px;color:var(--t2);cursor:pointer}
+.sb-item{display:flex;align-items:center;gap:10px;padding:8px 8px;font-size:13px;color:var(--t2);cursor:pointer;margin:1px 8px;border-radius:6px}
 .sb-item:hover{background:var(--bg);color:var(--t1)}
 .sb-item.open{color:var(--t1);font-weight:600}
 .sb-item svg{width:15px;height:15px;flex-shrink:0;opacity:.6}
 .sb-item.open svg{opacity:1}
 .sb-item .chev{margin-left:auto;width:11px;height:11px;opacity:.4}
 .sb-sub{padding-bottom:4px}
-.sb-sub-item{padding:6px 16px 6px 42px;font-size:13px;color:var(--t2);cursor:pointer}
+.sb-sub-item{padding:6px 8px 6px 34px;font-size:13px;color:var(--t2);cursor:pointer;margin:1px 8px;border-radius:6px}
 .sb-sub-item:hover{background:var(--bg);color:var(--t1)}
 .sb-sub-item.active{color:var(--blue);font-weight:600;background:var(--blue-lt)}
 
@@ -116,10 +116,11 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
   transition:box-shadow .15s;
 }
 .vf-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.09)}
-.vf-thumb{width:170px;flex-shrink:0;border-right:1px solid var(--border);overflow:hidden}
+.vf-thumb{width:170px;flex-shrink:0;border-right:1px solid var(--border);overflow:hidden;cursor:pointer}
 .vf-body{flex:1;padding:16px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
 .vf-header{display:flex;align-items:center;gap:8px}
-.vf-name{font-size:15px;font-weight:700;color:var(--t1)}
+.vf-name{font-size:15px;font-weight:700;color:var(--t1);cursor:pointer}
+.vf-name:hover{color:var(--blue);text-decoration:underline}
 .vf-badge-ready{background:#EDF3FF;color:var(--blue);border:1px solid rgba(17,109,255,.2);font-size:11px;font-weight:600;padding:2px 9px;border-radius:5px;flex-shrink:0}
 .vf-badge-live{background:var(--green-lt);color:#2A7548;border:1px solid var(--green-bd);font-size:11px;font-weight:600;padding:2px 9px;border-radius:5px;display:inline-flex;align-items:center;gap:5px;flex-shrink:0}
 .vf-badge-live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green)}
@@ -768,7 +769,7 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
 
       <!-- ── Card 1: Running ── -->
       <div class="vf-card" data-status="live">
-        <div class="vf-thumb">
+        <div class="vf-thumb" onclick="window.location.href='ab-test-layouts.html'">
           <div class="prev-catfood" style="height:100%">
             <div class="prev-browser-bar">
               <div class="prev-dot"></div><div class="prev-dot"></div><div class="prev-dot"></div>
@@ -790,7 +791,7 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
         </div>
         <div class="vf-body">
           <div class="vf-header">
-            <span class="vf-name">Home page — shop now color</span>
+            <span class="vf-name" onclick="window.location.href='ab-test-layouts.html'">Home page — shop now color</span>
             <span class="vf-badge-live">Running</span>
             <div class="vf-menu-wrap">
               <button class="vf-menu" onclick="toggleVfMenu(this,event)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3.5" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="12.5" r="1.2" fill="currentColor"/></svg></button>
@@ -819,7 +820,7 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
 
       <!-- ── Card 2: Result Ready ── -->
       <div class="vf-card" data-status="ready">
-        <div class="vf-thumb">
+        <div class="vf-thumb" onclick="window.location.href='ab-test-layouts.html'">
           <div class="prev-vase">
             <div class="prev-browser-bar">
               <div class="prev-dot"></div><div class="prev-dot"></div><div class="prev-dot"></div>
@@ -840,7 +841,7 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
         </div>
         <div class="vf-body">
           <div class="vf-header">
-            <span class="vf-name">Product page layout</span>
+            <span class="vf-name" onclick="window.location.href='ab-test-layouts.html'">Product page layout</span>
             <span class="vf-badge-ready">Result Ready</span>
             <div class="vf-menu-wrap">
               <button class="vf-menu" onclick="toggleVfMenu(this,event)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3.5" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="12.5" r="1.2" fill="currentColor"/></svg></button>
