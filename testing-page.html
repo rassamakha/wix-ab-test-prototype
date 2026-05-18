@@ -795,11 +795,11 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
             <div class="vf-menu-wrap">
               <button class="vf-menu" onclick="toggleVfMenu(this,event)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3.5" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="12.5" r="1.2" fill="currentColor"/></svg></button>
               <div class="vf-dropdown">
-                <div class="vfd-item" onclick="vfdAction('Viewing details...',this)"><svg viewBox="0 0 16 16" fill="none"><path d="M2 8s2.5-5 6-5 6 5 6 5-2.5 5-6 5-6-5-6-5z" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>View details</div>
-                <div class="vfd-item" onclick="vfdAction('Test duplicated.',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Duplicate</div>
+                <div class="vfd-item" onclick="vfdAction('Opening report...',this);window.location.href='ab-test-layouts.html'"><svg viewBox="0 0 16 16" fill="none"><path d="M2 8s2.5-5 6-5 6 5 6 5-2.5 5-6 5-6-5-6-5z" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>View report</div>
                 <div class="vfd-sep"></div>
-                <div class="vfd-item danger" onclick="vfdAction('Test stopped.',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="4" y="4" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>Stop test</div>
-                <div class="vfd-item danger" onclick="vfdAction('Test deleted.',this)"><svg viewBox="0 0 16 16" fill="none"><path d="M3 5h10M6 5V3h4v2M12 5l-.8 8H4.8L4 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Delete</div>
+                <div class="vfd-item" onclick="vfdAction('Test paused. Visitors now see the original version.',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="4" y="3" width="3" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="3" width="3" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>Pause test</div>
+                <div class="vfd-item" onclick="vfdAction('Opening settings — goal, traffic and duration are locked while live.',this)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 2v1.5M8 12.5V14M2 8h1.5M12.5 8H14M3.5 3.5l1 1M11.5 11.5l1 1M11.5 3.5l-1 1M4.5 11.5l-1 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Edit test</div>
+                <div class="vfd-item" onclick="vfdAction('Draft copy created with the same settings.',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Duplicate</div>
               </div>
             </div>
           </div>
@@ -845,11 +845,11 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
             <div class="vf-menu-wrap">
               <button class="vf-menu" onclick="toggleVfMenu(this,event)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3.5" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="12.5" r="1.2" fill="currentColor"/></svg></button>
               <div class="vf-dropdown">
-                <div class="vfd-item" onclick="vfdAction('Opening results...',this);window.location.href='ab-test-layouts.html'"><svg viewBox="0 0 16 16" fill="none"><path d="M2 8s2.5-5 6-5 6 5 6 5-2.5 5-6 5-6-5-6-5z" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>View results</div>
-                <div class="vfd-item" onclick="vfdAction('Winner version applied to your site.',this)"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.5 3.5 6.5-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Apply New Version</div>
-                <div class="vfd-item" onclick="vfdAction('Test duplicated.',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Duplicate</div>
+                <div class="vfd-item" onclick="vfdAction('Opening report...',this);window.location.href='ab-test-layouts.html'"><svg viewBox="0 0 16 16" fill="none"><path d="M2 8s2.5-5 6-5 6 5 6 5-2.5 5-6 5-6-5-6-5z" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>View report</div>
+                <div class="vfd-item" onclick="vfdAction('Opening settings — goal, traffic and duration are locked while live.',this)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 2v1.5M8 12.5V14M2 8h1.5M12.5 8H14M3.5 3.5l1 1M11.5 11.5l1 1M11.5 3.5l-1 1M4.5 11.5l-1 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Edit test</div>
+                <div class="vfd-item" onclick="vfdAction('Draft copy created with the same settings.',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Duplicate</div>
                 <div class="vfd-sep"></div>
-                <div class="vfd-item danger" onclick="vfdAction('Test deleted.',this)"><svg viewBox="0 0 16 16" fill="none"><path d="M3 5h10M6 5V3h4v2M12 5l-.8 8H4.8L4 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Delete</div>
+                <div class="vfd-item danger" onclick="vfdConfirmDelete(this)"><svg viewBox="0 0 16 16" fill="none"><path d="M3 5h10M6 5V3h4v2M12 5l-.8 8H4.8L4 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Delete</div>
               </div>
             </div>
           </div>
@@ -1426,6 +1426,12 @@ function toggleVfMenu(btn, e) {
 function vfdAction(msg, el) {
   if (_vfPortal) { _vfPortal.remove(); _vfPortal = null; _vfPortalBtn = null; }
   showVfToast(msg);
+}
+function vfdConfirmDelete(el) {
+  if (_vfPortal) { _vfPortal.remove(); _vfPortal = null; _vfPortalBtn = null; }
+  if (confirm('Delete this test? This action cannot be undone.')) {
+    showVfToast('Test deleted.');
+  }
 }
 function showVfToast(msg) {
   let t = document.getElementById('vf-toast');

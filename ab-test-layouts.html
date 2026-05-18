@@ -478,12 +478,10 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
         <div class="page-menu-wrap">
           <div class="icon-btn" onclick="togglePageMenu(event)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="13" r="1.2" fill="currentColor"/></svg></div>
           <div class="page-dot-menu" id="page-dot-menu">
-            <div class="pdm-item" onclick="showToast('Opening test settings...');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Edit test settings</div>
-            <div class="pdm-item" onclick="showToast('Test duplicated.');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Duplicate test</div>
-            <div class="pdm-item" onclick="showToast('Exporting results...');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Export results as CSV</div>
+            <div class="pdm-item" onclick="showToast('Draft copy created with the same settings.');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Duplicate</div>
+            <div class="pdm-item" onclick="showToast('Downloading report as PDF...');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Download report</div>
             <div class="pdm-sep"></div>
-            <div class="pdm-item danger" onclick="showToast('Test stopped.');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><rect x="4" y="4" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>Stop test</div>
-            <div class="pdm-item danger" onclick="showToast('Test deleted.');closePageMenu()"><svg viewBox="0 0 16 16" fill="none"><path d="M3 5h10M6 5V3h4v2M12 5l-.8 8H4.8L4 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Delete test</div>
+            <div class="pdm-item danger" onclick="pdmConfirmDelete()"><svg viewBox="0 0 16 16" fill="none"><path d="M3 5h10M6 5V3h4v2M12 5l-.8 8H4.8L4 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Delete test</div>
           </div>
         </div>
         <button class="primary-btn" onclick="showWinnerToast()">Implement winner version</button>
@@ -804,6 +802,10 @@ function togglePageMenu(e) {
   document.getElementById('page-dot-menu').classList.toggle('open');
 }
 function closePageMenu() { document.getElementById('page-dot-menu').classList.remove('open'); }
+function pdmConfirmDelete() {
+  closePageMenu();
+  if (confirm('Delete this test? This cannot be undone.')) showToast('Test deleted.');
+}
 document.addEventListener('click', () => closePageMenu());
 
 /* ── Preview hover overlays (injected) ── */

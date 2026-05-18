@@ -987,7 +987,7 @@ function publishTest() {
 }
 
 /* ── Traffic split bar ── */
-const SITE_MONTHLY_VISITORS = 200; // low-traffic prototype scenario
+const SITE_MONTHLY_VISITORS = 1200; // assumed traffic for duration estimates
 
 function calcEstDays(origPct) {
   const minPct = Math.min(origPct, 100 - origPct);
@@ -1004,35 +1004,28 @@ function updateDurationHint() {
   const days = calcEstDays(origPct);
   const minPct = Math.min(origPct, 100 - origPct);
   const daysLabel = days >= 90 ? '90+' : '~' + days;
-  const isLowTraffic = SITE_MONTHLY_VISITORS <= 300;
-  const isVeryUneven = minPct < 20;
+  const majorPct = Math.max(origPct, 100 - origPct);
 
   box.style.display = 'block';
 
-  if (isVeryUneven && isLowTraffic) {
-    box.className = 'duration-box warn';
-    document.getElementById('duration-hint-title').textContent = `Estimated duration: ${daysLabel} days`;
-    document.getElementById('duration-hint-sub').innerHTML = `Your traffic (${SITE_MONTHLY_VISITORS} visitors/mo) is too low for fast insights, and this split is very unequal. Consider a 50/50 split or wait for more traffic.`;
-  } else if (isLowTraffic) {
-    box.className = 'duration-box warn';
-    document.getElementById('duration-hint-title').textContent = `Estimated duration: ${daysLabel} days`;
-    document.getElementById('duration-hint-sub').textContent = `Your current traffic (${SITE_MONTHLY_VISITORS} visitors/mo) is too low for fast insights.`;
-  } else if (isVeryUneven) {
+  if (minPct <= 20) {
+    // e.g. 80/20 or more extreme
     box.className = 'duration-box warn';
     document.getElementById('duration-hint-title').textContent = `About ${daysLabel} days to a reliable result`;
-    document.getElementById('duration-hint-sub').textContent = 'Uneven traffic split increases test duration. A 50/50 split gives faster, more reliable results.';
-  } else if (minPct < 35) {
+    document.getElementById('duration-hint-sub').textContent = `At this split, only ${minPct}% of visitors see the new version — that group gets less traffic, which slows down reliable results. Consider a more balanced split.`;
+  } else if (minPct <= 30) {
+    // e.g. 70/30
     box.className = 'duration-box warn';
     document.getElementById('duration-hint-title').textContent = `About ${daysLabel} days to a reliable result`;
-    document.getElementById('duration-hint-sub').textContent = 'Uneven split slows down the test. Consider balancing closer to 50/50.';
+    document.getElementById('duration-hint-sub').textContent = `At a ${majorPct}/${minPct} split, the smaller group collects data more slowly. A split closer to 50/50 will get you results faster.`;
   } else {
     box.className = 'duration-box';
     document.getElementById('duration-hint-title').textContent = `About ${daysLabel} days to a reliable result`;
     document.getElementById('duration-hint-sub').textContent = 'Based on your page traffic. You can adjust below.';
   }
 
-  const inputVal = days >= 90 ? 90 : days;
-  if (document.getElementById('duration-input').value === '0' || document.getElementById('duration-input').value === '12' || document.getElementById('duration-input').value === '14') {
+  const inputVal = Math.min(days, 90);
+  if (['0','12','14'].includes(document.getElementById('duration-input').value)) {
     document.getElementById('duration-input').value = inputVal;
   }
 }
