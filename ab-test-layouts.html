@@ -134,7 +134,9 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
 .p-cat-body::before{left:7px;transform:rotate(-18deg)}.p-cat-body::after{right:7px;transform:rotate(18deg)}
 
 /* ─── Variants side by side ─── */
-.variants-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.variants-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+.variants-row>div{display:flex;flex-direction:column}
+.variants-row .preview-frame{flex:1}
 
 /* ─── Shared divider ─── */
 .opt-divider{height:1px;background:var(--border);margin:18px 0}
@@ -341,7 +343,7 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
 /* Original: large image + overlapping info card */
 .pp-orig{background:#FAF7F0;display:flex;flex-direction:column}
 .pp-orig-body{position:relative;flex:1}
-.pp-orig-image{width:100%;height:82px;background:linear-gradient(160deg,#6B8F7E 0%,#4E7A69 40%,#3A6355 100%);display:flex;align-items:flex-start;justify-content:flex-start}
+.pp-orig-image{width:100%;height:116px;background:linear-gradient(160deg,#6B8F7E 0%,#4E7A69 40%,#3A6355 100%);display:flex;align-items:flex-start;justify-content:flex-start}
 .pp-orig-card{position:absolute;right:7px;top:8px;background:white;border:1px solid rgba(0,0,0,.12);border-radius:3px;padding:5px 6px;width:44%;box-shadow:0 2px 8px rgba(0,0,0,.14)}
 .pp-orig-card-title{font-size:5.5px;font-weight:800;color:#1A1A1A;line-height:1.3;margin-bottom:2px}
 .pp-orig-card-price{font-size:6px;font-weight:700;color:#1A1A1A;margin-bottom:5px}
@@ -352,7 +354,7 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
 .pp-orig-thumb:nth-child(2){background:#B0C4B8}
 /* New Version: left thumbs + big center image + right info panel */
 .pp-new{background:#FAF7F0;display:flex;flex-direction:column}
-.pp-new-body{display:flex;flex:1;min-height:90px}
+.pp-new-body{display:flex;flex:1;min-height:124px}
 .pp-new-thumbs-col{width:16px;display:flex;flex-direction:column;gap:3px;padding:5px 2px;background:#FAF7F0;border-right:1px solid rgba(0,0,0,.06)}
 .pp-new-thumb{width:12px;height:14px;background:#D5CFC6;border-radius:1px;border:1px solid rgba(0,0,0,.08)}
 .pp-new-thumb.sel{border-color:#5A5A5A}
@@ -398,6 +400,8 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
 .pdm-sep{height:1px;background:var(--border);margin:3px 0}
 .pdm-item.danger{color:#D93025}
 .pdm-item.danger svg{color:#D93025}
+/* Tooltip bubble */
+#tt-bubble{position:fixed;background:#1B1B1B;color:white;font-size:11px;font-weight:400;line-height:1.5;padding:8px 10px;border-radius:6px;white-space:normal;max-width:230px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9999;text-align:left}
 </style>
 </head>
 <body>
@@ -468,7 +472,7 @@ body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--b
     <div class="page-head">
       <div>
         <div class="page-title">Product page layout</div>
-        <div class="page-meta">Started: April 20 at 17:22<span class="sep">·</span>Ended: May 13 at 14:10</div>
+        <div class="page-meta">Started: April 20 at 17:22</div>
       </div>
       <div class="head-actions">
         <div class="page-menu-wrap">
@@ -858,6 +862,54 @@ function openLiveSite(e) {
   showToast('Opening live site in new tab...');
 }
 
+/* ── Tooltip system ── */
+(function() {
+  const tt = document.createElement('div');
+  tt.id = 'tt-bubble';
+  document.body.appendChild(tt);
+  document.addEventListener('mouseover', e => {
+    const el = e.target.closest('[data-tooltip]');
+    if (!el) { tt.style.opacity = '0'; return; }
+    tt.textContent = el.dataset.tooltip;
+    const r = el.getBoundingClientRect();
+    const top = r.top - tt.offsetHeight - 8;
+    tt.style.left = Math.max(6, Math.min(window.innerWidth - 240, r.left + r.width/2 - 115)) + 'px';
+    tt.style.top  = (top < 4 ? r.bottom + 6 : top) + 'px';
+    tt.style.opacity = '1';
+  });
+  document.addEventListener('mouseout', e => {
+    if (!e.target.closest('[data-tooltip]')) tt.style.opacity = '0';
+  });
+})();
+
+const TOOLTIP_TEXTS = {
+  goal: 'The primary action you\'re measuring to determine a winner, such as a page visit or button click, chosen during setup.',
+  successRate: 'The percentage of visitors who saw this version of your page and completed your chosen goal.',
+  bounceRate: 'Visitors who left your site after viewing only one page.',
+  reliability: 'This shows how confident we are that the result isn\'t just luck. The higher it gets, the more you can trust that the winning version is actually better.'
+};
+
+function assignTooltips() {
+  document.querySelectorAll('.detail-row').forEach(row => {
+    const lbl = row.querySelector('.detail-lbl');
+    if (!lbl) return;
+    const icon = lbl.querySelector('span[style*="border-radius:50%"]');
+    if (!icon) return;
+    const text = lbl.textContent.trim();
+    if (text.includes('Goal')) icon.dataset.tooltip = TOOLTIP_TEXTS.goal;
+  });
+  document.querySelectorAll('.stat-row').forEach(row => {
+    const nameEl = row.querySelector('.stat-name');
+    if (!nameEl) return;
+    const icon = nameEl.querySelector('span[style*="border-radius:50%"]');
+    if (!icon) return;
+    const text = nameEl.textContent.trim();
+    if (text.includes('Success Rate')) icon.dataset.tooltip = TOOLTIP_TEXTS.successRate;
+    else if (text.includes('Bounce Rate')) icon.dataset.tooltip = TOOLTIP_TEXTS.bounceRate;
+    else if (text.includes('Reliability') || text.includes('Confidence')) icon.dataset.tooltip = TOOLTIP_TEXTS.reliability;
+  });
+}
+
 /* ── Default to Option 7 + init overlays ── */
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('base-layout').style.display = 'none';
@@ -866,6 +918,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const headerCta = document.querySelector('.primary-btn');
   if(headerCta) headerCta.style.display = 'none';
   addOverlays();
+  assignTooltips();
 });
 
 function setOpt(n, btn) {
@@ -887,7 +940,7 @@ function setOpt(n, btn) {
     document.getElementById('layout-' + n).classList.add('active');
   }
   // inject overlays into any newly visible frames
-  setTimeout(addOverlays, 50);
+  setTimeout(() => { addOverlays(); assignTooltips(); }, 50);
 }
 </script>
 </body>
